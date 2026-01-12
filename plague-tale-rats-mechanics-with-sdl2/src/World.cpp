@@ -5,14 +5,17 @@
 
 World::World(float gravity) {
     G = -gravity;
+	grid = new Grid(50);
 }
 
 World::~World() {
+	
     delete player;
 
     for (auto rat : rats) {
         delete rat;
     }
+    delete grid;
 }
 
 void World::AddBody(Body* body) {

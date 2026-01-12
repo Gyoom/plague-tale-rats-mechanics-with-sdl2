@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Grid.h"
 #include "Body.h"
 #include "Player.h"
 #include "Rat.h"
@@ -21,6 +22,7 @@ class World {
         SDL_Texture* bgTexture = nullptr;
 		Player* player = nullptr;
         std::vector<Rat*> rats;
+		Grid* grid = nullptr;
 
         World(float gravity);
         ~World();

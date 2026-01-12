@@ -30,7 +30,7 @@ void Application::Setup() {
 	world->AddBody(player->body);
 
     srand(time(NULL));
-    for (int i = 0; i < 30; i++) {
+   /* for (int i = 0; i < 30; i++) {
         Rat* rat = new Rat(
             new Body(
                 CircleShape(10),
@@ -42,7 +42,7 @@ void Application::Setup() {
         );
         world->rats.push_back(rat);
         world->AddBody(rat->body);
-	}
+	}*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,7 +115,7 @@ void Application::Update() {
 
 void Application::RenderBodies() {
     
-	Body* player = world->player->body;
+	/*Body* player = world->player->body;
 	CircleShape* circleShape = (CircleShape*) player->shape;
     Graphics::DrawCircle(player->position.x, player->position.y, circleShape->radius, player->rotation, player->isColliding ? 0xF90B00FF : 0xFF00FF00);
 
@@ -123,7 +123,16 @@ void Application::RenderBodies() {
         Body* body = rat->body;
 		CircleShape* circleShape = (CircleShape*)body->shape;
 		Graphics::DrawCircle(body->position.x, body->position.y, circleShape->radius, body->rotation, body->isColliding ? 0xF90B00FF : 0xFF0000FF);
-    }
+    }*/
+
+    Graphics::DrawCircle(0, 0, 25, 0, 0xF90B00FF);
+	float cellSize = world->grid->GetCellSize();
+    for (auto cols : world->grid->GetCells()) {
+        for (auto cell : cols) {
+			Vec2 cellPos = cell->GetWorldPosition();
+            Graphics::DrawRect(cellPos.x, cellPos.y, cellSize, cellSize, 0x55555555);
+        }
+	}
 }
 
 void Application::RenderText() {

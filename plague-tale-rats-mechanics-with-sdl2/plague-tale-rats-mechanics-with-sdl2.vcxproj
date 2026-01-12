@@ -138,6 +138,8 @@
     <None Include="SDL2_image.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Cell.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="lib\SDL2_gfx\SDL2_gfxPrimitives.c" />
     <ClCompile Include="lib\SDL2_gfx\SDL2_imageFilter.c" />
     <ClCompile Include="lib\SDL2_gfx\SDL2_rotozoom.c" />
@@ -156,6 +158,8 @@
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cell.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="lib\SDL2_gfx\SDL2_gfxPrimitives.h" />
     <ClInclude Include="lib\SDL2_gfx\SDL2_gfxPrimitives_font.h" />
     <ClInclude Include="lib\SDL2_gfx\SDL2_imageFilter.h" />
