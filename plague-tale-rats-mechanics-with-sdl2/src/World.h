@@ -12,7 +12,6 @@ class World {
         float G = 9.8;
 
 		std::vector<Body*> bodies;
-
 		// Global Forces and Torque
         std::vector<Vec2> forces;
         std::vector<float> torques;

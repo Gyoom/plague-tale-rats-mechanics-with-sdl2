@@ -43,7 +43,7 @@ struct PolygonShape: public Shape {
     void UpdateVertices(float angle, const Vec2& position) override;
 };
 
-struct BoxShape: public PolygonShape {
+struct BoxShape : public PolygonShape { // child class of PolygonShape
     float width;
     float height;
 

@@ -66,6 +66,10 @@ void World::bodiesUpdate(float dt) {
 void World::Update(float dt) 
 {
 	this->player->Update(dt);
+    for(auto rat : rats)
+    {
+		rat->Update(dt);
+    }
 	//World::bodiesUpdate(dt);
 }
 
