@@ -31,6 +31,19 @@ Vec2 Vec2::Rotate(const float angle) const {
 	return result;
 }
 
+Vec2 Vec2::Clamp(const Vec2& v, float maxLen)
+{
+	float lenSq = v.x * v.x + v.y * v.y;
+
+	if (lenSq > maxLen * maxLen)
+	{
+		float invLen = 1.0f / sqrt(lenSq);
+		return v * (maxLen * invLen);
+	}
+
+	return v;
+}
+
 float Vec2::Magnitude() const {
 	return sqrtf(x * x + y * y);
 }

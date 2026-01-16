@@ -11,6 +11,11 @@ struct Body {
     bool isColliding = false;
 	bool canCollide = true;
 
+	Vec2 forward = Vec2(-1.0f, 0.0f);
+	float maxVelocity = 5000.0f;
+	float linearDrag = 2;
+    float slowingRadius = 50.0f;
+
     // Linear motion
     Vec2 position;
     Vec2 velocity;
@@ -61,6 +66,9 @@ struct Body {
 
     void IntegrateLinear(float dt);
     void IntegrateAngular(float dt);
+
+	void CheckLimits();
+    void ApplyBoidsForces();
 
     virtual void Update(float dt);
 };

@@ -4,11 +4,12 @@
 Rat::Rat(Body* body, const char* textureFileName) : Entity(body, textureFileName)
 {
 	type = RAT;
+	std::cout << "Creating Rat" << std::endl;
 }
 
 Rat::~Rat()
 {
-	
+	std::cout << "Deleting Rat" << std::endl;
 }
 
 void Rat::Update(float dt)

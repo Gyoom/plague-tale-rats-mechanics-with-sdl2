@@ -13,13 +13,18 @@ bool Application::IsRunning() {
 // Setup function (executed once in the beginning of the simulation)
 ///////////////////////////////////////////////////////////////////////////////
 void Application::Setup() {
-    running = Graphics::OpenWindow(1920, 1200);
+    running = Graphics::OpenWindow(500, 300);
 	
     world = new World(0);
+    //world->grid = new Grid(50);
 
 	Player* player = new Player(
         new Body(
-            CircleShape(30),
+            PolygonShape({
+                Vec2(25, 0),
+                Vec2(-10, 10),
+                Vec2(-10, -10),
+				}),
             Vec2(Graphics::Width() / 2.0f, Graphics::Height() / 2.0f),
             1.0f,
             false
@@ -52,9 +57,10 @@ void Application::Input() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-            case SDL_QUIT:
+           case SDL_QUIT:
                 running = false;
                 break;
+            
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_ESCAPE)
                     running = false;
@@ -66,8 +72,26 @@ void Application::Input() {
                 }
                 break;
 
+            
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == SDL_BUTTON_LEFT) {
+                    /*int x, y;
+                    SDL_GetMouseState(&x, &y);
+                    Vec2 mousePos = Vec2(x, y);
+
+                    Vec2 playerPos = world->player->body->position;
+
+					Vec2 direction = mousePos - playerPos;
+					direction.Normalize();
+					world->player->body->AddForce(direction * 50000);*/
+					
+                }
+
+                if (event.button.button == SDL_BUTTON_RIGHT) {
+					world->player->body->AddTorque(20000);
+                }
+
+               /* if (event.button.button == SDL_BUTTON_LEFT) {
                     int x, y;
                     SDL_GetMouseState(&x, &y);
                     Vec2 mousePos = Vec2(x, y);
@@ -78,7 +102,7 @@ void Application::Input() {
                 }
                 if (event.button.button == SDL_BUTTON_MIDDLE) {
 
-                }
+                }*/
                 break;
         }
     }
@@ -115,24 +139,35 @@ void Application::Update() {
 
 void Application::RenderBodies() {
     
-	/*Body* player = world->player->body;
-	CircleShape* circleShape = (CircleShape*) player->shape;
-    Graphics::DrawCircle(player->position.x, player->position.y, circleShape->radius, player->rotation, player->isColliding ? 0xF90B00FF : 0xFF00FF00);
 
+	
+    if (world->player != nullptr)
+    {
+        Body* player = world->player->body;
+        CircleShape* circleShape = (CircleShape*)player->shape;
+        //Graphics::DrawCircle(player->position.x, player->position.y, circleShape->radius, player->rotation, player->isColliding ? 0xF90B00FF : 0xFF00FF00);
+		Graphics::DrawPolygon(player->position.x, player->position.y, ((PolygonShape*)player->shape)->worldVertices, player->isColliding ? 0xF90B00FF : 0xFF00FF00);
+    }
+
+    
     for (auto rat : world->rats) {
         Body* body = rat->body;
 		CircleShape* circleShape = (CircleShape*)body->shape;
 		Graphics::DrawCircle(body->position.x, body->position.y, circleShape->radius, body->rotation, body->isColliding ? 0xF90B00FF : 0xFF0000FF);
-    }*/
+    }
 
-    Graphics::DrawCircle(0, 0, 25, 0, 0xF90B00FF);
-	float cellSize = world->grid->GetCellSize();
-    for (auto cols : world->grid->GetCells()) {
-        for (auto cell : cols) {
-			Vec2 cellPos = cell->GetWorldPosition();
-            Graphics::DrawRect(cellPos.x, cellPos.y, cellSize, cellSize, 0x55555555);
+    if (world->grid != nullptr)
+    {
+        Graphics::DrawCircle(0, 0, 5, 0, 0xF90B00FF);
+        float cellSize = world->grid->GetCellSize();
+        for (auto cols : world->grid->GetCells()) {
+            for (auto cell : cols) {
+                Vec2 cellPos = cell->GetWorldPosition();
+                Graphics::DrawRect(cellPos.x, cellPos.y, cellSize, cellSize, 0x55555555);
+            }
         }
-	}
+    }
+    
 }
 
 void Application::RenderText() {

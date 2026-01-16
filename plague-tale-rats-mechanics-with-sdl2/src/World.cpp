@@ -5,17 +5,20 @@
 
 World::World(float gravity) {
     G = -gravity;
-	grid = new Grid(50);
+    std::cout << "Creating World" << std::endl;
+	
 }
 
 World::~World() {
 	
+    std::cout << "\nDeleting World" << std::endl;
     delete player;
 
     for (auto rat : rats) {
         delete rat;
     }
     delete grid;
+    
 }
 
 void World::AddBody(Body* body) {

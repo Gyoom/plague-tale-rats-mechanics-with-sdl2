@@ -1,4 +1,4 @@
-#include "Graphics.h"
+﻿#include "Graphics.h"
 #include "Body.h"
 #include <math.h>
 #include <iostream>
@@ -29,12 +29,14 @@ Body::Body(const Shape& shape, Vec2 pos, float mass, bool canCollide) {
     } else {
         this->invI = 0.0;
     }
+    std::cout << "Creating Body" << std::endl;
 }
 
 Body::~Body() {
     delete shape;
 	shape = nullptr;
     SDL_DestroyTexture(texture);
+    std::cout << "Deleting Body" << std::endl;
 }
 
 void Body::SetTexture(const char* textureFileName) {
@@ -86,16 +88,24 @@ void Body::IntegrateLinear(float dt) {
         return;
     }
 
-    // Find the acceleration based on the forces that are being applied and the mass
     acceleration = sumForces * invMass;
 
-    // Integrate the acceleration to find the new velocity
     velocity += acceleration * dt;
 
-    // Integrate the velocity to find the new position
+    // 🔑 DRAG
+    velocity *= std::exp(-linearDrag * dt);
+
+    // 🔑 SPEED LIMIT
+    velocity = velocity.Clamp(velocity, maxVelocity);
+
     position += velocity * dt;
 
-    // Clear all the forces acting on the object before the next physics step
+    if (velocity.MagnitudeSquared() > 0.0001f)
+    {
+        forward = velocity.Normalize();
+        rotation = atan2(forward.y, forward.x);
+    }
+
     ClearForces();
 }
 
@@ -117,9 +127,52 @@ void Body::IntegrateAngular(float dt) {
     ClearTorque();
 }
 
+void Body::CheckLimits()
+{
+    // Limit position to stay within window bounds
+    if (position.x < 0) position.x = Graphics::Width();
+    if (position.x > Graphics::Width()) position.x = 0;
+    if (position.y < 0) Graphics::Height();
+    if (position.y > Graphics::Height()) position.y = 0;
+    // Limit rotation to be within 0-360 degrees
+    /*if (rotation >= 360.0f) rotation -= 360.0f;
+	if (rotation < 0.0f) rotation += 360.0f;*/
+}
+
+void Body::ApplyBoidsForces() {
+    // Placeholder for boids forces application
+    // In a complete implementation, this would calculate and apply forces based on boids behavior
+}
+
 void Body::Update(float dt) {
+    /*Vec2 desiredVelocity = forward * maxVelocity;
+    Vec2 steering = desiredVelocity - velocity;
+    AddForce(steering);*/
+
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+    Vec2 mousePos = Vec2(x, y);
+
+    Vec2 toTarget = mousePos - position;
+	float distance = toTarget.Magnitude();
+	Vec2 direction = toTarget.Normalize();
+
+
+    float desiredSpeed = maxVelocity;
+
+    if (distance < slowingRadius)
+    {
+        desiredSpeed = maxVelocity * (distance / slowingRadius);
+    }
+    Vec2 desiredVelocity = direction * desiredSpeed;
+    Vec2 steering = desiredVelocity - velocity;
+    AddForce(steering);
+
     IntegrateLinear(dt);
-    IntegrateAngular(dt);
+    //IntegrateAngular(dt);
+
+    CheckLimits();
+
     shape->UpdateVertices(rotation, position);
 }
 

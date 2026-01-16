@@ -9,11 +9,11 @@
 
 CircleShape::CircleShape(float radius) {
     this->radius = radius;
-    std::cout << "CircleShape constructor called! : " << std::endl;
+    std::cout << "Creating CircleShape" << std::endl;
 }
 
 CircleShape::~CircleShape() {
-    std::cout << "CircleShape destructor called!" << std::endl;
+    std::cout << "Deleting CicrleShape" << std::endl;
 }
 
 Shape* CircleShape::Clone() const {
@@ -44,11 +44,11 @@ PolygonShape::PolygonShape(const std::vector<Vec2> vertices) {
         localVertices.push_back(vertex);
         worldVertices.push_back(vertex);
     }
-    std::cout << "PolygonShape constructor called!" << std::endl;
+    std::cout << "Creating polygoneShape" << std::endl;
 }
 
 PolygonShape::~PolygonShape() {
-    std::cout << "PolygonShape destructor called!" << std::endl;
+    std::cout << "Deleting PolygoneShape" << std::endl;
 }
 
 ShapeType PolygonShape::GetType() const {
@@ -137,10 +137,13 @@ BoxShape::BoxShape(float width, float height) {
     worldVertices.push_back(Vec2(+width / 2.0, -height / 2.0));
     worldVertices.push_back(Vec2(+width / 2.0, +height / 2.0));
     worldVertices.push_back(Vec2(-width / 2.0, +height / 2.0));
+
+    std::cout << "Creating BoxeShape" << std::endl;
 }
 
 BoxShape::~BoxShape() {
     // TODO: ...
+    std::cout << "Deleting BoxShape" << std::endl;
 }
 
 ShapeType BoxShape::GetType() const {

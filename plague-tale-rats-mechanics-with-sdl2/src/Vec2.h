@@ -13,9 +13,12 @@ struct Vec2 {
     void Sub(const Vec2& v);                 // v1.Sub(v2)
     void Scale(const float n);               // v1.Scale(n)
     Vec2 Rotate(const float angle) const;    // v1.Rotate(angle)
+    Vec2 Clamp(const Vec2& min, float maxLen);
 
     float Magnitude() const;                 // v1.Magnitude()
     float MagnitudeSquared() const;          // v1.MagnitudeSquared()
+
+	
 
     Vec2& Normalize();                       // v1.Normalize()
     Vec2 UnitVector() const;                 // v1.UnitVector()
