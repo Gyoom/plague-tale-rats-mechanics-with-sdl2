@@ -12,9 +12,9 @@ struct Body {
 	bool canCollide = true;
 
 	Vec2 forward = Vec2(-1.0f, 0.0f);
-	float maxVelocity = 5000.0f;
-	float linearDrag = 2;
-    float slowingRadius = 50.0f;
+    float maxVelocity = 300.0f; // limit de vitesse
+	
+	float linearDrag = 3;
 
     // Linear motion
     Vec2 position;
@@ -71,4 +71,9 @@ struct Body {
     void ApplyBoidsForces();
 
     virtual void Update(float dt);
+};
+
+struct PlayerBody : Body {
+    PlayerBody(const Shape& shape, Vec2 pos, float mass, bool canCollide = true);
+    void Update(float dt) override;
 };

@@ -3,9 +3,17 @@
 #include "Graphics.h"
 #include <iostream>
 
+World* World::instance = nullptr;
+
 World::World(float gravity) {
     G = -gravity;
     std::cout << "Creating World" << std::endl;
+
+    if (World::instance == nullptr) {
+        World::instance = this;
+    } else {
+        std::cerr << "Warning: Multiple instances of World detected!" << std::endl;
+	}
 	
 }
 
@@ -68,7 +76,10 @@ void World::bodiesUpdate(float dt) {
 
 void World::Update(float dt) 
 {
-	this->player->Update(dt);
+	
+
+    if (player != nullptr)
+	    player->Update(dt);
     for(auto rat : rats)
     {
 		rat->Update(dt);

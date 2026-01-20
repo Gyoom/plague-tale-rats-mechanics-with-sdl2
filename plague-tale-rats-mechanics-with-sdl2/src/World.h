@@ -18,10 +18,12 @@ class World {
 
 
     public:
+		static World* instance;
         SDL_Texture* bgTexture = nullptr;
 		Player* player = nullptr;
         std::vector<Rat*> rats;
 		Grid* grid = nullptr;
+        std::vector<Rat*> playersRats;
 
         World(float gravity);
         ~World();

@@ -10,9 +10,11 @@ struct Graphics {
     static int windowHeight;
     static SDL_Window* window;
     static SDL_Renderer* renderer;
+    static float distanceUnit;
 
     static int Width();
     static int Height();
+	static float DistanceUnit();
     static bool OpenWindow();
 	static bool OpenWindow(float width, float height);
     static void CloseWindow();

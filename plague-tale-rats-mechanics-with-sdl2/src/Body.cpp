@@ -2,7 +2,9 @@
 #include "Body.h"
 #include <math.h>
 #include <iostream>
+#include "World.h"
 
+// Base Body class implementation
 
 Body::Body(const Shape& shape, Vec2 pos, float mass, bool canCollide) {
     this->shape = shape.Clone();
@@ -53,7 +55,7 @@ bool Body::IsStatic() const {
 }
 
 void Body::AddForce(const Vec2& force) {
-    sumForces += force;
+    sumForces = sumForces + force;
 }
 
 void Body::AddTorque(float torque) {
@@ -145,17 +147,32 @@ void Body::ApplyBoidsForces() {
 }
 
 void Body::Update(float dt) {
-    /*Vec2 desiredVelocity = forward * maxVelocity;
-    Vec2 steering = desiredVelocity - velocity;
-    AddForce(steering);*/
+    
+    IntegrateLinear(dt);
+    //IntegrateAngular(dt);
 
-    int x, y;
+    CheckLimits();
+
+    shape->UpdateVertices(rotation, position);
+}
+
+// PlayerBody class implementation
+
+PlayerBody::PlayerBody(const Shape& shape, Vec2 pos, float mass, bool canCollide) : Body(shape, pos, mass, canCollide)
+{
+    
+}
+
+void PlayerBody::Update(float dt)
+{
+    // Seek towards mouse position
+    /*int x, y;
     SDL_GetMouseState(&x, &y);
     Vec2 mousePos = Vec2(x, y);
 
     Vec2 toTarget = mousePos - position;
-	float distance = toTarget.Magnitude();
-	Vec2 direction = toTarget.Normalize();
+    float distance = toTarget.Magnitude();
+    Vec2 direction = toTarget.Normalize();
 
 
     float desiredSpeed = maxVelocity;
@@ -166,17 +183,7 @@ void Body::Update(float dt) {
     }
     Vec2 desiredVelocity = direction * desiredSpeed;
     Vec2 steering = desiredVelocity - velocity;
-    AddForce(steering);
+    AddForce(steering);*/
 
-    IntegrateLinear(dt);
-    //IntegrateAngular(dt);
-
-    CheckLimits();
-
-    shape->UpdateVertices(rotation, position);
+	Body::Update(dt);
 }
-
-
-
-
-

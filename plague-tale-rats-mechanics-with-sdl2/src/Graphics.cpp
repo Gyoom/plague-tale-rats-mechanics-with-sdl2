@@ -5,6 +5,7 @@ SDL_Window* Graphics::window = NULL;
 SDL_Renderer* Graphics::renderer = NULL;
 int Graphics::windowWidth = 0;
 int Graphics::windowHeight = 0;
+float Graphics::distanceUnit = 0;
 
 int Graphics::Width() {
     return windowWidth;
@@ -12,6 +13,10 @@ int Graphics::Width() {
 
 int Graphics::Height() {
     return windowHeight;
+}
+
+float Graphics::DistanceUnit() {
+	return distanceUnit;
 }
 
 bool Graphics::OpenWindow() {
@@ -23,6 +28,7 @@ bool Graphics::OpenWindow() {
     SDL_GetCurrentDisplayMode(0, &display_mode);
     windowWidth = display_mode.w;
     windowHeight = display_mode.h;
+	distanceUnit = Vec2(windowWidth, windowHeight).Magnitude() / 10000.0f;
     window = SDL_CreateWindow(NULL, 0, 0, windowWidth, windowHeight, SDL_WINDOW_BORDERLESS);
     if (!window) {
         std::cerr << "Error creating SDL window" << std::endl;
@@ -45,6 +51,7 @@ bool Graphics::OpenWindow(float width, float height) {
     SDL_GetCurrentDisplayMode(0, &display_mode);
     windowWidth = width;
 	windowHeight = height;
+    distanceUnit = Vec2(windowWidth, windowHeight).Magnitude() / 10000.0f;
     window = SDL_CreateWindow(NULL, 0, 0, windowWidth, windowHeight, SDL_WINDOW_BORDERLESS);
     if (!window) {
         std::cerr << "Error creating SDL window" << std::endl;

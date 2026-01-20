@@ -13,13 +13,13 @@ bool Application::IsRunning() {
 // Setup function (executed once in the beginning of the simulation)
 ///////////////////////////////////////////////////////////////////////////////
 void Application::Setup() {
-    running = Graphics::OpenWindow(500, 300);
+    running = Graphics::OpenWindow(500, 500);
 	
     world = new World(0);
     //world->grid = new Grid(50);
 
 	Player* player = new Player(
-        new Body(
+        new PlayerBody(
             PolygonShape({
                 Vec2(25, 0),
                 Vec2(-10, 10),
@@ -33,21 +33,33 @@ void Application::Setup() {
 	);
     world->player = player;
 	world->AddBody(player->body);
+	srand(time(NULL));
+	Vec2 dir = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f));
+    world->player->body->velocity = dir * world->player->body->maxVelocity; // random initial velocity
+	std::cout << "Player created at position (" << dir.x << ", " << dir.y << ")\n";
+	std::cout << "Player max velocity: " << world->player->body->maxVelocity << "\n";
+	std::cout << "Player created at position (" << world->player->body->velocity.x << ", " << world->player->body->velocity.y << ")\n";
 
-    srand(time(NULL));
-   /* for (int i = 0; i < 30; i++) {
-        Rat* rat = new Rat(
-            new Body(
-                CircleShape(10),
-                Vec2(rand() % Graphics::Width(), rand() % Graphics::Height()),
-                1.0f,
-                false
-            ),
-            "assets/rat.png"
-        );
-        world->rats.push_back(rat);
-        world->AddBody(rat->body);
-	}*/
+
+ //   srand(time(NULL));
+ //   for (int i = 0; i < 50; i++) {
+ //       Rat* rat = new Rat(
+ //           new Body(
+ //               PolygonShape({
+ //                   Vec2(25, 0),
+ //                   Vec2(-10, 10),
+ //                   Vec2(-10, -10),
+ //               }),
+ //               Vec2(rand() % Graphics::Width(), rand() % Graphics::Height()),
+ //               1.0f,
+ //               false
+ //           ),
+ //           "assets/rat.png"
+ //       );
+	//	rat->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * rat->body->maxVelocity; // random initial velocity
+ //       world->rats.push_back(rat);
+ //       world->AddBody(rat->body);
+	//}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -143,18 +155,30 @@ void Application::RenderBodies() {
 	
     if (world->player != nullptr)
     {
-        Body* player = world->player->body;
-        CircleShape* circleShape = (CircleShape*)player->shape;
-        //Graphics::DrawCircle(player->position.x, player->position.y, circleShape->radius, player->rotation, player->isColliding ? 0xF90B00FF : 0xFF00FF00);
-		Graphics::DrawPolygon(player->position.x, player->position.y, ((PolygonShape*)player->shape)->worldVertices, player->isColliding ? 0xF90B00FF : 0xFF00FF00);
+        PlayerBody* pBody = (PlayerBody*) world->player->body;
+
+		Graphics::DrawCircle(pBody->position.x, pBody->position.y, world->player->detectionRadius, 0, 0xF90B00FF);
+
+		Graphics::DrawPolygon(pBody->position.x, pBody->position.y, ((PolygonShape*)pBody->shape)->worldVertices, 0xF90B00FF);
+
+        for (auto rat : world->playersRats) {
+            Graphics::DrawLine(
+                world->player->body->position.x,
+                world->player->body->position.y,
+                rat->body->position.x,
+                rat->body->position.y,
+                0xF90B00FF
+            );
+        }
     }
 
     
     for (auto rat : world->rats) {
         Body* body = rat->body;
-		CircleShape* circleShape = (CircleShape*)body->shape;
-		Graphics::DrawCircle(body->position.x, body->position.y, circleShape->radius, body->rotation, body->isColliding ? 0xF90B00FF : 0xFF0000FF);
+        Graphics::DrawPolygon(body->position.x, body->position.y, ((PolygonShape*)body->shape)->worldVertices, body->isColliding ? 0xF90B00FF : 0xFF00FF00);
     }
+
+    
 
     if (world->grid != nullptr)
     {
