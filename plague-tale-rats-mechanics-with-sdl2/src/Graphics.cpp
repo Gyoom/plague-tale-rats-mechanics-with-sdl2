@@ -80,7 +80,7 @@ void Graphics::DrawLine(int x0, int y0, int x1, int y1, Uint32 color) {
 
 void Graphics::DrawCircle(int x, int y, int radius, float angle, Uint32 color) {
     circleColor(renderer, x, y, radius, color);
-    lineColor(renderer, x, y, x + cos(angle) * radius, y + sin(angle) * radius, color);
+    //lineColor(renderer, x, y, x + cos(angle) * radius, y + sin(angle) * radius, color);
 }
 
 void Graphics::DrawFillCircle(int x, int y, int radius, Uint32 color) {

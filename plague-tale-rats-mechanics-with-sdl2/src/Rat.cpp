@@ -7,11 +7,9 @@ Rat::Rat(Body* body, const char* textureFileName) : Entity(body, textureFileName
 	type = RAT;
 	std::cout << "Creating Rat" << std::endl;
 
-	maxForce *= multiplier;
 	cohesionWeight *= multiplier;
 	separationWeight *= multiplier;
 	alignmentWeight *= multiplier;
-	body->maxVelocity *= multiplier;
 }
 
 Rat::~Rat()
@@ -25,8 +23,23 @@ void Rat::Update(float dt)
 	neighbors.clear();
 	for (auto r : World::instance->rats)
 	{
-		if (r != this && r->body->position.Dist(body->position) < detectionRadius)
-			neighbors.push_back(r);
+        if (r != this && r->body->position.Dist(body->position) < detectionRadius)
+        {
+            Vec2 forward = body->forward;
+            Vec2 toOther = r->body->position - body->position;
+            float dist = toOther.Magnitude();
+
+            Vec2 dirToOther = toOther / dist;
+
+            float cosAngle = forward.Dot(dirToOther);
+
+            float cosThreshold = cos(detectionAngleRad);
+
+            if (cosAngle >= cosThreshold)
+            {
+                neighbors.push_back(r);
+            }
+        }
 	}
 
 
@@ -38,36 +51,39 @@ void Rat::Update(float dt)
 
     if (neighbors.size() > 0)
     {
+		Vec2 avgFlockVelocity = Vec2(0.0f, 0.0f);
         for (auto rat : neighbors)
         {
-            alignmentForce += rat->body->velocity;
+            avgFlockVelocity += rat->body->velocity;
         }
+        avgFlockVelocity /= (float) neighbors.size();
 
-        alignmentForce /= (float) neighbors.size();
-        alignmentForce = alignmentForce.Normalize() * body->maxVelocity;
-        alignmentForce -= body->velocity;
+        alignmentForce = avgFlockVelocity.Normalize() * body->maxVelocity - body->velocity;
 
     }
-    steeringForce += alignmentForce * alignmentWeight;
+	alignmentForce *= alignmentWeight; // Scale alignment force
+	body->AddForce(Vec2::ClampMag(alignmentForce, maxForce));
 
     // Separation force
     Vec2 separationForce = Vec2(0.0f, 0.0f);
     if (neighbors.size() > 0)
     {
+		Vec2 avgSeparation = Vec2(0.0f, 0.0f);
         for (auto rat : neighbors)
         {
             Vec2 toRat = body->position - rat->body->position;
             float dist = toRat.Magnitude();
             if (dist > 0.0f && dist < separationDistance)
             {
-                separationForce += toRat.Normalize() / dist; // plus proche = plus fort
+                avgSeparation += toRat.Normalize() / dist; // plus proche = plus fort
             }
         }
-        separationForce /= (float)neighbors.size();
-        separationForce = separationForce.Normalize() * body->maxVelocity;
-        separationForce -= body->velocity; 
+        avgSeparation /= (float)neighbors.size();
+
+        separationForce = avgSeparation.Normalize() * body->maxVelocity - body->velocity;
     }
-	steeringForce += separationForce * separationWeight; // Scale separation force
+    separationForce *= separationWeight; // Scale separation force
+	body->AddForce(Vec2::ClampMag(separationForce, maxForce));
 
     //cohesion force
     Vec2 cohesionForce = Vec2(0.0f, 0.0f);
@@ -79,14 +95,13 @@ void Rat::Update(float dt)
             centerOfMass += rat->body->position;
         }
         centerOfMass /= (float) neighbors.size();
-        Vec2 toCOM = centerOfMass - body->position;
+
+		Vec2 toCOM = centerOfMass - body->position; // Vector pointing to the center of mass
+
         cohesionForce = toCOM.Normalize() * body->maxVelocity - body->velocity;
     }
-    steeringForce += cohesionForce * cohesionWeight; // Scale cohesion force
+	cohesionForce *= cohesionWeight; // Scale cohesion force
+    body->AddForce(Vec2::ClampMag(cohesionForce, maxForce));
     
-	// Limit the steering force
-    steeringForce = steeringForce.Clamp(steeringForce, maxForce);
-    body->AddForce(steeringForce);
-
 	Entity::Update(dt);
 }

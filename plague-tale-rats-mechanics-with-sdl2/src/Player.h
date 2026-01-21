@@ -13,7 +13,7 @@ struct Player : public Entity
 	float separationWeight = 2.0f; 
 	float cohesionWeight = 0.6f;
 
-	float multiplier = 40.0f;
+	float multiplier = 1.0f;
 	
 	
 

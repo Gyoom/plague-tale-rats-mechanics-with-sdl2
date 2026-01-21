@@ -5,15 +5,16 @@
 
 struct Rat : public Entity  
 {  
-	float detectionRadius = 80.0f;
-	float separationDistance = 30.0f; // Distance to maintain from other rats
+	float detectionRadius = 250.0f;
+	float separationDistance = 100.0f; // Distance to maintain from other rats
 	float maxForce = 800.0f; // limit de reaction
+	float detectionAngleRad = 130.0f * (3.14159265f / 180.0f); // convert degrees to radians
 
-	float alignmentWeight = 1.0f;
-	float separationWeight = 2.0f;
-	float cohesionWeight = 0.6f;
+	float alignmentWeight = 2.0f;
+	float separationWeight = 2.5f;
+	float cohesionWeight = 1.0f;
 
-	float multiplier = 10.0f;
+	float multiplier = 1.0f;	
 
 	std::vector<Rat*> neighbors;
 

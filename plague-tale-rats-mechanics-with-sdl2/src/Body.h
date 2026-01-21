@@ -12,9 +12,9 @@ struct Body {
 	bool canCollide = true;
 
 	Vec2 forward = Vec2(-1.0f, 0.0f);
-    float maxVelocity = 300.0f; // limit de vitesse
-	
-	float linearDrag = 3;
+    float maxVelocity = 600.0f; // limit de vitesse
+	float minVelocity = 340.0f; // limit de vitesse
+	float linearDrag = 0;
 
     // Linear motion
     Vec2 position;
@@ -68,7 +68,6 @@ struct Body {
     void IntegrateAngular(float dt);
 
 	void CheckLimits();
-    void ApplyBoidsForces();
 
     virtual void Update(float dt);
 };

@@ -32,6 +32,8 @@ Body::Body(const Shape& shape, Vec2 pos, float mass, bool canCollide) {
         this->invI = 0.0;
     }
     std::cout << "Creating Body" << std::endl;
+
+	maxVelocity = 300.0f;
 }
 
 Body::~Body() {
@@ -98,13 +100,14 @@ void Body::IntegrateLinear(float dt) {
     velocity *= std::exp(-linearDrag * dt);
 
     // 🔑 SPEED LIMIT
-    velocity = velocity.Clamp(velocity, maxVelocity);
+    velocity = Vec2::ClampMag(velocity, maxVelocity, minVelocity);
 
     position += velocity * dt;
 
     if (velocity.MagnitudeSquared() > 0.0001f)
     {
-        forward = velocity.Normalize();
+        forward = velocity;
+		forward.Normalize();
         rotation = atan2(forward.y, forward.x);
     }
 
@@ -132,18 +135,18 @@ void Body::IntegrateAngular(float dt) {
 void Body::CheckLimits()
 {
     // Limit position to stay within window bounds
-    if (position.x < 0) position.x = Graphics::Width();
-    if (position.x > Graphics::Width()) position.x = 0;
-    if (position.y < 0) Graphics::Height();
-    if (position.y > Graphics::Height()) position.y = 0;
+    if (position.x < 0) 
+        position.x = Graphics::Width();
+    if (position.x > Graphics::Width()) 
+        position.x = 0;
+
+    if (position.y < 0) 
+        position.y = Graphics::Height();
+    if (position.y > Graphics::Height()) 
+        position.y = 0;
     // Limit rotation to be within 0-360 degrees
     /*if (rotation >= 360.0f) rotation -= 360.0f;
 	if (rotation < 0.0f) rotation += 360.0f;*/
-}
-
-void Body::ApplyBoidsForces() {
-    // Placeholder for boids forces application
-    // In a complete implementation, this would calculate and apply forces based on boids behavior
 }
 
 void Body::Update(float dt) {

@@ -31,14 +31,18 @@ Vec2 Vec2::Rotate(const float angle) const {
 	return result;
 }
 
-Vec2 Vec2::Clamp(const Vec2& v, float maxLen)
+Vec2 Vec2::ClampMag(const Vec2& v, float maxMag, float min)
 {
 	float lenSq = v.x * v.x + v.y * v.y;
 
-	if (lenSq > maxLen * maxLen)
+	if (lenSq > maxMag * maxMag)
 	{
 		float invLen = 1.0f / sqrt(lenSq);
-		return v * (maxLen * invLen);
+		return v * (maxMag * invLen);
+	} else if (min >= 0.0f && lenSq < min * min)
+	{
+		float invLen = 1.0f / sqrt(lenSq);
+		return v * (min * invLen);
 	}
 
 	return v;
