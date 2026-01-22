@@ -14,7 +14,8 @@ enum EntityType {
 	LIGHT_SOURCE,
 };
 
-struct Entity {  
+class Entity { 
+public:
   Body* body;  
   EntityType type;
 
@@ -23,5 +24,7 @@ struct Entity {
   ~Entity();
 
   void virtual Update(float dt);
+
+  void virtual Render();
 ;
 };  

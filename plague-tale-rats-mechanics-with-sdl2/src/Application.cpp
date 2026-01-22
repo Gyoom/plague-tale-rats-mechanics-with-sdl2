@@ -58,7 +58,7 @@ void Application::Setup() {
         );
 		rat->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * rat->body->maxVelocity; // random initial velocity
         world->rats.push_back(rat);
-        world->AddBody(rat->body);
+        world->AddEntity(rat);
 	}
 }
 
@@ -150,83 +150,11 @@ void Application::Update() {
 ///////////////////////////////////////////////////////////////////////////////
 
 void Application::RenderBodies() {
-    
+    for(auto e : world->GetEntities()) {
+        e->Render();
+	}
 
-	
-    if (world->player != nullptr)
-    {
-        PlayerBody* pBody = (PlayerBody*) world->player->body;
-
-		Graphics::DrawCircle(pBody->position.x, pBody->position.y, world->player->detectionRadius, 0, 0xF90B00FF);
-
-		Graphics::DrawPolygon(pBody->position.x, pBody->position.y, ((PolygonShape*)pBody->shape)->worldVertices, 0xF90B00FF);
-
-        for (auto rat : world->playersRats) {
-            Graphics::DrawLine(
-                world->player->body->position.x,
-                world->player->body->position.y,
-                rat->body->position.x,
-                rat->body->position.y,
-                0xF90B00FF
-            );
-        }
-    }
-
-	int i = 0;
-    for (auto rat : world->rats) {
-        Body* body = rat->body;
-        Graphics::DrawPolygon(body->position.x, body->position.y, ((PolygonShape*)body->shape)->worldVertices, body->isColliding ? 0xF90B00FF : 0xFF00FF00);
-        
-        if (i == 0)
-        { 
-            Graphics::DrawCircle(body->position.x, body->position.y, rat->detectionRadius, 0, 0xFFFFFFFF);
-			float angle = atan2(body->forward.y, body->forward.x);
-
-            Vec2 limit = body->position + rat->body->forward * rat->detectionRadius;
-            Graphics::DrawLine(
-                body->position.x,
-                body->position.y,
-                limit.x,
-                limit.y,
-                0xFF00FF00
-            );
-
-
-            limit = body->position + Vec2(std::cos(angle - rat->detectionAngleRad), std::sin(angle - rat->detectionAngleRad)) * rat->detectionRadius;
-            Graphics::DrawLine(
-                body->position.x,
-                body->position.y,
-                limit.x,
-                limit.y,
-                0xFFFFFFFF
-			);
-
-           limit = body->position + Vec2(std::cos(angle + rat->detectionAngleRad), std::sin(angle + rat->detectionAngleRad)) * rat->detectionRadius;
-            Graphics::DrawLine(
-                body->position.x,
-                body->position.y,
-                limit.x,
-                limit.y,
-                0xFFFFFFFF
-            );
-
-            for (auto n : rat->neighbors)
-            {
-                Graphics::DrawLine(
-                    body->position.x,
-                    body->position.y,
-                    n->body->position.x,
-                    n->body->position.y,
-                    0xFF0000FF
-				);
-            }
-        }
-		i++;
-    }
-
-    
-
-    if (world->grid != nullptr)
+    /*if (world->grid != nullptr)
     {
         Graphics::DrawCircle(0, 0, 5, 0, 0xF90B00FF);
         float cellSize = world->grid->GetCellSize();
@@ -236,7 +164,7 @@ void Application::RenderBodies() {
                 Graphics::DrawRect(cellPos.x, cellPos.y, cellSize, cellSize, 0x55555555);
             }
         }
-    }
+    }*/
     
 }
 

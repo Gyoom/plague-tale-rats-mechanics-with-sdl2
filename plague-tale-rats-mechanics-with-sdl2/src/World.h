@@ -11,7 +11,7 @@ class World {
     private:
         float G = 9.8;
 
-		std::vector<Body*> bodies;
+		std::vector<Entity*> entities;
 		// Global Forces and Torque
         std::vector<Vec2> forces;
         std::vector<float> torques;
@@ -23,13 +23,12 @@ class World {
 		Player* player = nullptr;
         std::vector<Rat*> rats;
 		Grid* grid = nullptr;
-        std::vector<Rat*> playersRats;
 
         World(float gravity);
         ~World();
 
-        void AddBody(Body* body);
-        std::vector<Body*>& GetBodies();
+        void AddEntity(Entity* body);
+        std::vector<Entity*>& GetEntities();
 
         void AddForce(const Vec2& force);
         void AddTorque(float torque);

@@ -7,7 +7,8 @@
 
 class Entity;
 
-struct Body {
+class Body {
+public:
     bool isColliding = false;
 	bool canCollide = true;
 
@@ -70,9 +71,6 @@ struct Body {
 	void CheckLimits();
 
     virtual void Update(float dt);
-};
 
-struct PlayerBody : Body {
-    PlayerBody(const Shape& shape, Vec2 pos, float mass, bool canCollide = true);
-    void Update(float dt) override;
+	virtual void Render();
 };

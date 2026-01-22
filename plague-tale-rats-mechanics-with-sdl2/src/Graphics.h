@@ -11,6 +11,7 @@ struct Graphics {
     static SDL_Window* window;
     static SDL_Renderer* renderer;
     static float distanceUnit;
+    static const bool debugMode = true;
 
     static int Width();
     static int Height();

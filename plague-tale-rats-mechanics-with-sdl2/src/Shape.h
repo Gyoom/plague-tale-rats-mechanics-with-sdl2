@@ -9,15 +9,18 @@ enum ShapeType {
     BOX
 };
 
-struct Shape {
+class Shape {
+public:
     virtual ~Shape() = default;
     virtual ShapeType GetType() const = 0;
     virtual Shape* Clone() const = 0;
     virtual void UpdateVertices(float angle, const Vec2& position) = 0;
     virtual float GetMomentOfInertia() const = 0;
+    virtual void DebugRender(Vec2 position) const = 0;
 };
 
-struct CircleShape: public Shape {
+class CircleShape: public Shape {
+public:
     float radius;
 
     CircleShape(const float radius);
@@ -26,9 +29,12 @@ struct CircleShape: public Shape {
     Shape* Clone() const override;
     void UpdateVertices(float angle, const Vec2& position) override;
     float GetMomentOfInertia() const override;
+
+    void DebugRender(Vec2 position) const override;
 };
 
-struct PolygonShape: public Shape {
+class PolygonShape: public Shape {
+public:
     std::vector<Vec2> localVertices;
     std::vector<Vec2> worldVertices;
    
@@ -41,9 +47,11 @@ struct PolygonShape: public Shape {
     float FindMinSeparation(const PolygonShape* other, Vec2& axis, Vec2& point) const;
     float GetMomentOfInertia() const override;
     void UpdateVertices(float angle, const Vec2& position) override;
+    void DebugRender(Vec2 position) const override;
 };
 
-struct BoxShape : public PolygonShape { // child class of PolygonShape
+class BoxShape : public PolygonShape { // child class of PolygonShape
+public:
     float width;
     float height;
 

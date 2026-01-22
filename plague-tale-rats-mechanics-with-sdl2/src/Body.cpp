@@ -31,8 +31,6 @@ Body::Body(const Shape& shape, Vec2 pos, float mass, bool canCollide) {
     } else {
         this->invI = 0.0;
     }
-    std::cout << "Creating Body" << std::endl;
-
 	maxVelocity = 300.0f;
 }
 
@@ -40,7 +38,6 @@ Body::~Body() {
     delete shape;
 	shape = nullptr;
     SDL_DestroyTexture(texture);
-    std::cout << "Deleting Body" << std::endl;
 }
 
 void Body::SetTexture(const char* textureFileName) {
@@ -159,34 +156,10 @@ void Body::Update(float dt) {
     shape->UpdateVertices(rotation, position);
 }
 
-// PlayerBody class implementation
+void Body::Render() {
 
-PlayerBody::PlayerBody(const Shape& shape, Vec2 pos, float mass, bool canCollide) : Body(shape, pos, mass, canCollide)
-{
-    
+    if (Graphics::debugMode || texture == nullptr)
+	    shape->DebugRender(position);
 }
 
-void PlayerBody::Update(float dt)
-{
-    // Seek towards mouse position
-    /*int x, y;
-    SDL_GetMouseState(&x, &y);
-    Vec2 mousePos = Vec2(x, y);
 
-    Vec2 toTarget = mousePos - position;
-    float distance = toTarget.Magnitude();
-    Vec2 direction = toTarget.Normalize();
-
-
-    float desiredSpeed = maxVelocity;
-
-    if (distance < slowingRadius)
-    {
-        desiredSpeed = maxVelocity * (distance / slowingRadius);
-    }
-    Vec2 desiredVelocity = direction * desiredSpeed;
-    Vec2 steering = desiredVelocity - velocity;
-    AddForce(steering);*/
-
-	Body::Update(dt);
-}

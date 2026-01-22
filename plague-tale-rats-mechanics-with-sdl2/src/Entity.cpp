@@ -18,3 +18,8 @@ void Entity::Update(float dt)
 {
 	body->Update(dt);
 }
+
+void Entity::Render()
+{
+	body->Render();
+}

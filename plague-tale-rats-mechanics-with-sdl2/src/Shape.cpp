@@ -2,6 +2,7 @@
 #include <limits>
 
 #include "Shape.h"
+#include "Graphics.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Circles Shapes
@@ -9,11 +10,9 @@
 
 CircleShape::CircleShape(float radius) {
     this->radius = radius;
-    std::cout << "Creating CircleShape" << std::endl;
 }
 
 CircleShape::~CircleShape() {
-    std::cout << "Deleting CicrleShape" << std::endl;
 }
 
 Shape* CircleShape::Clone() const {
@@ -34,6 +33,11 @@ float CircleShape::GetMomentOfInertia() const {
     return 0.5 * (radius * radius);
 }
 
+void CircleShape::DebugRender(Vec2 position) const
+{
+    Graphics::DrawCircle(position.x, position.y, radius, 0.0f, 0xFFFFFFFF);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////
 // Polygone Shapes
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -44,11 +48,9 @@ PolygonShape::PolygonShape(const std::vector<Vec2> vertices) {
         localVertices.push_back(vertex);
         worldVertices.push_back(vertex);
     }
-    std::cout << "Creating polygoneShape" << std::endl;
 }
 
 PolygonShape::~PolygonShape() {
-    std::cout << "Deleting PolygoneShape" << std::endl;
 }
 
 ShapeType PolygonShape::GetType() const {
@@ -119,6 +121,11 @@ void PolygonShape::UpdateVertices(float angle, const Vec2& position) {
     }
 }
 
+void PolygonShape::DebugRender(Vec2 position) const
+{
+    Graphics::DrawPolygon(position.x, position.y, worldVertices, 0xFFFFFFFF);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////
 // Box Shapes
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -138,12 +145,10 @@ BoxShape::BoxShape(float width, float height) {
     worldVertices.push_back(Vec2(+width / 2.0, +height / 2.0));
     worldVertices.push_back(Vec2(-width / 2.0, +height / 2.0));
 
-    std::cout << "Creating BoxeShape" << std::endl;
 }
 
 BoxShape::~BoxShape() {
     // TODO: ...
-    std::cout << "Deleting BoxShape" << std::endl;
 }
 
 ShapeType BoxShape::GetType() const {
