@@ -1,23 +1,18 @@
 
-#include "Rat.h"
+#include "Boid.h"
 #include "World.h"
 
-Rat::Rat(Body* body, const char* textureFileName) : Entity(body, textureFileName)
+Boid::Boid(Body* body, const char* textureFileName, bool displayDebugTools) : Entity(body, textureFileName)
 {
 	type = RAT;
-	std::cout << "Creating Rat" << std::endl;
-
-	cohesionWeight *= multiplier;
-	separationWeight *= multiplier;
-	alignmentWeight *= multiplier;
+	_displayDebugTools = displayDebugTools;
 }
 
-Rat::~Rat()
+Boid::~Boid()
 {
-	std::cout << "Deleting Rat" << std::endl;
 }
 
-void Rat::Update(float dt)
+void Boid::Update(float dt)
 {
 	// Detect neighboring rats within detection radius
 	neighbors.clear();
@@ -104,4 +99,13 @@ void Rat::Update(float dt)
     body->AddForce(Vec2::ClampMag(cohesionForce, maxForce));
     
 	Entity::Update(dt);
+}
+
+void Boid::Render()
+{
+    Entity::Render();
+    if (_displayDebugTools)
+    {
+       
+	}
 }

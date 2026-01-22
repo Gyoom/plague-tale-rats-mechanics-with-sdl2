@@ -79,7 +79,7 @@
     <ClCompile Include="src\Player.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rat.cpp">
+    <ClCompile Include="src\Boid.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
     <ClCompile Include="src\Vec2.cpp">
@@ -135,7 +135,7 @@
     <ClInclude Include="src\Vec2.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rat.h">
+    <ClInclude Include="src\Boid.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="src\Entity.h">

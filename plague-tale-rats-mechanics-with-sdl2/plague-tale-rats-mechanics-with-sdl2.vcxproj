@@ -151,7 +151,7 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MatMN.cpp" />
     <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\Rat.cpp" />
+    <ClCompile Include="src\Boid.cpp" />
     <ClCompile Include="src\Shape.cpp" />
     <ClCompile Include="src\Vec2.cpp" />
     <ClCompile Include="src\VecN.cpp" />
@@ -172,7 +172,7 @@
     <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\MatMN.h" />
     <ClInclude Include="src\Player.h" />
-    <ClInclude Include="src\Rat.h" />
+    <ClInclude Include="src\Boid.h" />
     <ClInclude Include="src\Shape.h" />
     <ClInclude Include="src\Vec2.h" />
     <ClInclude Include="src\VecN.h" />

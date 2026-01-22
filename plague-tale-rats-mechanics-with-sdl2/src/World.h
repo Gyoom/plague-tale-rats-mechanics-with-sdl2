@@ -3,7 +3,7 @@
 #include "../Grid.h"
 #include "Body.h"
 #include "Player.h"
-#include "Rat.h"
+#include "Boid.h"
 #include "Vec2.h"
 #include <vector>
 
@@ -21,7 +21,7 @@ class World {
 		static World* instance;
         SDL_Texture* bgTexture = nullptr;
 		Player* player = nullptr;
-        std::vector<Rat*> rats;
+        std::vector<Boid*> rats;
 		Grid* grid = nullptr;
 
         World(float gravity);

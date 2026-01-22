@@ -43,7 +43,7 @@ void Application::Setup() {
 
     srand(time(NULL));
     for (int i = 0; i < 50; i++) {
-        Rat* rat = new Rat(
+        Boid* rat = new Boid(
             new Body(
                 PolygonShape({
                     Vec2(25, 0),
@@ -54,7 +54,8 @@ void Application::Setup() {
                 1.0f,
                 false
             ),
-            "assets/rat.png"
+            "assets/rat.png",
+            i == 0
         );
 		rat->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * rat->body->maxVelocity; // random initial velocity
         world->rats.push_back(rat);
