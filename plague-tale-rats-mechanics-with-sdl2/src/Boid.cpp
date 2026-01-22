@@ -106,6 +106,47 @@ void Boid::Render()
     Entity::Render();
     if (_displayDebugTools)
     {
-       
+		// Draw detection radius
+        Graphics::DrawCircle(body->position.x, body->position.y, detectionRadius, 0, 0xFFFFFFFF);
+        float angle = atan2(body->forward.y, body->forward.x);
+		// Draw forward line
+        Vec2 limit = body->position + body->forward * detectionRadius;
+        Graphics::DrawLine(
+            body->position.x,
+            body->position.y,
+            limit.x,
+            limit.y,
+            0xFF00FF00
+        );
+
+		// Draw detection angle lines
+        limit = body->position + Vec2(std::cos(angle - detectionAngleRad), std::sin(angle - detectionAngleRad)) * detectionRadius;
+        Graphics::DrawLine(
+            body->position.x,
+            body->position.y,
+            limit.x,
+            limit.y,
+            0xFFFFFFFF
+        );
+
+        limit = body->position + Vec2(std::cos(angle + detectionAngleRad), std::sin(angle + detectionAngleRad)) * detectionRadius;
+        Graphics::DrawLine(
+            body->position.x,
+            body->position.y,
+            limit.x,
+            limit.y,
+            0xFFFFFFFF
+        );
+		// Draw lines to neighbors
+        for (auto n : neighbors)
+        {
+            Graphics::DrawLine(
+                body->position.x,
+                body->position.y,
+                n->body->position.x,
+                n->body->position.y,
+                0xFF0000FF
+            );
+        }
 	}
 }

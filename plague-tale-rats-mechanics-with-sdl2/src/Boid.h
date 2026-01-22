@@ -17,7 +17,7 @@ public:
 
 	bool _displayDebugTools = false;
 
-	std::vector<Boid*> neighbors;
+	std::vector<Boid*> neighbors; // TODO : use weak_ptr to avoid circular references?
 
 	Boid() = default;  
 	Boid(Body* body, const char* textureFileName, bool DisplayDebugTools = false);  
