@@ -5,6 +5,8 @@
 #include <SDL_ttf.h>
 #include <SDL_image.h>
 
+using namespace std;
+
 bool Application::IsRunning() {
     return running;
 }
@@ -15,7 +17,7 @@ bool Application::IsRunning() {
 void Application::Setup() {
     running = Graphics::OpenWindow();
 	
-    world = new World(0);
+    world = make_unique<World>(0);
     //world->grid = new Grid(50);
 
 	//Player* player = new Player(
@@ -42,9 +44,10 @@ void Application::Setup() {
 
 
     srand(time(NULL));
+	unique_ptr<Boid> rat;
     for (int i = 0; i < 50; i++) {
-        Boid* rat = new Boid(
-            new Body(
+        rat = make_unique<Boid>(
+            make_unique<Body>(
                 PolygonShape({
                     Vec2(25, 0),
                     Vec2(-10, 10),
@@ -58,8 +61,8 @@ void Application::Setup() {
             i == 0
         );
 		rat->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * rat->body->maxVelocity; // random initial velocity
-        world->rats.push_back(rat);
-        world->AddEntity(rat);
+        world->rats.push_back(move(rat));
+        
 	}
 }
 
@@ -151,7 +154,7 @@ void Application::Update() {
 ///////////////////////////////////////////////////////////////////////////////
 
 void Application::RenderBodies() {
-    for(auto e : world->GetEntities()) {
+    for(auto& e : world->rats) {
         e->Render();
 	}
 
@@ -188,5 +191,4 @@ void Application::Render() {
 // Destroy function to delete objects and close the window
 ///////////////////////////////////////////////////////////////////////////////
 void Application::Destroy() {
-    delete world;
 }

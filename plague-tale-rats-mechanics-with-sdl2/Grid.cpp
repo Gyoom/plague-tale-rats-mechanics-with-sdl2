@@ -1,6 +1,7 @@
 #include "Grid.h"
 #include "src/Graphics.h"
 
+using namespace std;
 
 Grid::Grid(int cellSize)
 {
@@ -8,20 +9,16 @@ Grid::Grid(int cellSize)
 	cols = 1920 / cellSize;
 	rows = 1200 / cellSize;	
 	for (int x = 0; x < cols; x++) {
-		cells.push_back(std::vector<Cell*>());
+		cells.push_back(vector<unique_ptr<Cell>>());
 		for (int y = 0; y < rows; y++) {
-			cells[x].push_back(new Cell(Vec2(x * cellSize + cellSize/2, y * cellSize + cellSize / 2), Vec2(x, y)));
+			cells[x].push_back(make_unique<Cell>(Vec2(x * cellSize + cellSize/2, y * cellSize + cellSize / 2), Vec2(x, y)));
 		}
 	}
 }
 
-Grid::~Grid()
+vector<vector<unique_ptr<Cell>>>& Grid::GetCells() 
 {
-	for (auto col : cells) {
-		for(auto cell : col) {
-			delete cell;
-		}
-	}
+	return cells;
 }
 
 int Grid::GetCellSize() const
@@ -44,7 +41,7 @@ Vec2 Grid::GetCellWorldPosition(Vec2 logicalCoord) const
 	if (logicalCoord.x < 0 || logicalCoord.x >= cols || logicalCoord.y < 0 || logicalCoord.y >= rows) {
 		return Vec2(-1, -1); // Return an invalid position if out of bounds
 	}
-	Cell* c = cells[logicalCoord.x][logicalCoord.y];
+	Cell* c = cells[logicalCoord.x][logicalCoord.y].get();
 
 	if (c == nullptr) {
 		return Vec2(-1, -1); // Return an invalid position if cell is null
@@ -62,7 +59,7 @@ Vec2 Grid::GetCellLogicalPosition(Vec2 worldCoord) const
 	if (cellCoord.x < 0 || cellCoord.x >= cols || cellCoord.y < 0 || cellCoord.y >= rows) {
 		return Vec2(-1, -1); // Return an invalid position if out of bounds
 	}
-	Cell* c = cells[worldCoord.x][worldCoord.y];
+	Cell* c = cells[worldCoord.x][worldCoord.y].get();
 		
 	return cellCoord;
 }

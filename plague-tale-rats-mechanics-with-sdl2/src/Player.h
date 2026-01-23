@@ -6,7 +6,7 @@ class Player : public Entity
 {
 public:
 	Player() = default;
-	Player(Body* body, const char* textureFileName);
+	Player(std::unique_ptr<Body> body, const char* textureFileName);
 	~Player();
 
 	void Update(float dt) override;	

@@ -16,11 +16,11 @@ enum EntityType {
 
 class Entity { 
 public:
-  Body* body;  
+  std::unique_ptr<Body> body;  
   EntityType type;
 
   Entity() = default;
-  Entity(Body* body, const char* textureFileName);
+  Entity(std::unique_ptr<Body> body, const char* textureFileName);
   ~Entity();
 
   void virtual Update(float dt);

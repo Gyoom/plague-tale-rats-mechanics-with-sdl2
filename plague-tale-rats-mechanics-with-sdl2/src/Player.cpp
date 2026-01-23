@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "World.h"
 
-Player::Player(Body* body, const char* textureFileName): Entity(body, textureFileName)
+Player::Player(std::unique_ptr<Body> body, const char* textureFileName): Entity(std::move(body), textureFileName)
 {
 	type = PLAYER;
 	std::cout << "Creating Player" << std::endl;

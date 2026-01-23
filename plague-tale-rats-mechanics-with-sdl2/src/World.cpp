@@ -20,20 +20,13 @@ World::World(float gravity) {
 World::~World() {
 	
     std::cout << "\nDeleting World" << std::endl;
-
-    for (auto e : entities) {
-        delete e;
-    }
-
-    delete grid;
-    
 }
 
-void World::AddEntity(Entity* body) {
+void World::AddBody(Body* body) {
     entities.push_back(body);
 }
 
-std::vector<Entity*>& World::GetEntities() {
+std::vector<Body*>& World::GetBodies() {
     return entities;
 }
 
@@ -45,23 +38,26 @@ void World::AddTorque(float torque) {
     torques.push_back(torque);
 }
 
+/**
+* Update all bodies in the world by applying global forces and torques
+*/
 void World::bodiesUpdate(float dt) {
     //this->AddTorque(20.f);
 
    // Loop all bodies of the world applying forces
     for (auto e : entities) {
         // Apply the weight force to all bodies
-        Vec2 weight = Vec2(0.0, e->body->mass * G * PIXELS_PER_METER);
-        e->body->AddForce(weight);
+        Vec2 weight = Vec2(0.0, e->mass * G * PIXELS_PER_METER);
+        e->AddForce(weight);
 
         // Apply global forces (wind etc.) to all bodies
         for (auto force : forces) {
-            e->body->AddForce(force);
+            e->AddForce(force);
         }
 
         // Apply global torque (wind etc.) to all bodies
         for (auto torque : torques) {
-            e->body->AddTorque(torque);
+            e->AddTorque(torque);
         }
     }
     
@@ -69,7 +65,7 @@ void World::bodiesUpdate(float dt) {
 
 void World::Update(float dt) 
 {
-    for (auto e : entities) {
+    for (auto& e : rats) {
         e->Update(dt);
     }
 	//World::bodiesUpdate(dt);

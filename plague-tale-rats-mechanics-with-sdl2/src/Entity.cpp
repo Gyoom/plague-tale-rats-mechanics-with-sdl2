@@ -2,16 +2,15 @@
 #include "Graphics.h"
 #include "Body.h"
 
-Entity::Entity(Body* body, const char* textureFileName)
+Entity::Entity(std::unique_ptr<Body> body, const char* textureFileName)
 {
-	this->body = body;
-	body->SetTexture(textureFileName);
+	this->body = std::move(body);
+	this->body->SetTexture(textureFileName);
 	type = ENTITY;
 }
 
 Entity::~Entity()
 {
-	delete body;
 }
 
 void Entity::Update(float dt)

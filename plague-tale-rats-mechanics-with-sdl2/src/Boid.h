@@ -20,7 +20,7 @@ public:
 	std::vector<Boid*> neighbors; // TODO : use weak_ptr to avoid circular references?
 
 	Boid() = default;  
-	Boid(Body* body, const char* textureFileName, bool DisplayDebugTools = false);  
+	Boid(std::unique_ptr<Body> body, const char* textureFileName, bool DisplayDebugTools = false);  
 	~Boid();
 
 	void Update(float dt) override;

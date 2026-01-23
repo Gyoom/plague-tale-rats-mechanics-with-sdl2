@@ -2,7 +2,7 @@
 #include "Boid.h"
 #include "World.h"
 
-Boid::Boid(Body* body, const char* textureFileName, bool displayDebugTools) : Entity(body, textureFileName)
+Boid::Boid(std::unique_ptr<Body> body, const char* textureFileName, bool displayDebugTools) : Entity(std::move(body), textureFileName)
 {
 	type = RAT;
 	_displayDebugTools = displayDebugTools;
@@ -16,9 +16,9 @@ void Boid::Update(float dt)
 {
 	// Detect neighboring rats within detection radius
 	neighbors.clear();
-	for (auto r : World::instance->rats)
+	for (auto& r : World::instance->rats)
 	{
-        if (r != this && r->body->position.Dist(body->position) < detectionRadius)
+        if (r.get() != this && r->body->position.Dist(body->position) < detectionRadius)
         {
             Vec2 forward = body->forward;
             Vec2 toOther = r->body->position - body->position;
@@ -32,7 +32,7 @@ void Boid::Update(float dt)
 
             if (cosAngle >= cosThreshold)
             {
-                neighbors.push_back(r);
+                neighbors.push_back(r.get());
             }
         }
 	}

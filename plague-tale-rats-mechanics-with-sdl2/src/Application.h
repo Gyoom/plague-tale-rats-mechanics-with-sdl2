@@ -5,12 +5,13 @@
 #include <vector>
 #include <SDL_ttf.h>
 
+
 class Application {
     private:
         bool debug = false;
         bool running = false;
 
-        World* world;
+        std::unique_ptr<World> world;
 
 
     public:

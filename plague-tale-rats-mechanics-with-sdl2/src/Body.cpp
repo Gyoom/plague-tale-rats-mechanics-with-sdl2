@@ -32,11 +32,10 @@ Body::Body(const Shape& shape, Vec2 pos, float mass, bool canCollide) {
         this->invI = 0.0;
     }
 	maxVelocity = 300.0f;
+	World::instance->AddBody(this);
 }
 
 Body::~Body() {
-    delete shape;
-	shape = nullptr;
     SDL_DestroyTexture(texture);
 }
 

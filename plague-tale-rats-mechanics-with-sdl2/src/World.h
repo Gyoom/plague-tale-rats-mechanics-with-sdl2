@@ -9,9 +9,9 @@
 
 class World {
     private:
-        float G = 9.8;
+        float G = 9.8f;
 
-		std::vector<Entity*> entities;
+		std::vector<Body*> entities;
 		// Global Forces and Torque
         std::vector<Vec2> forces;
         std::vector<float> torques;
@@ -20,15 +20,15 @@ class World {
     public:
 		static World* instance;
         SDL_Texture* bgTexture = nullptr;
-		Player* player = nullptr;
-        std::vector<Boid*> rats;
-		Grid* grid = nullptr;
+        std::unique_ptr<Player> player = nullptr;
+		std::vector<std::unique_ptr<Boid>> rats;
+        std::unique_ptr<Grid> grid = nullptr;
 
         World(float gravity);
         ~World();
 
-        void AddEntity(Entity* body);
-        std::vector<Entity*>& GetEntities();
+        void AddBody(Body* body);
+        std::vector<Body*>& GetBodies();
 
         void AddForce(const Vec2& force);
         void AddTorque(float torque);
