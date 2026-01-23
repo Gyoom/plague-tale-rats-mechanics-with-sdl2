@@ -126,6 +126,12 @@ void Graphics::DrawTexture(int x, int y, int width, int height, float rotation, 
     SDL_RenderCopyEx(renderer, texture, NULL, &dstRect, rotationDeg, NULL, SDL_FLIP_NONE);
 }
 
+bool Graphics::IsInsideScreen(const Vec2& position)
+{
+    return (position.x >= 0 && position.x <= windowWidth &&
+		position.y >= 0 && position.y <= windowHeight);
+}
+
 void Graphics::CloseWindow(void) {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

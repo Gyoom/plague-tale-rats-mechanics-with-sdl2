@@ -132,14 +132,14 @@ void Body::CheckLimits()
 {
     // Limit position to stay within window bounds
     if (position.x < 0) 
-        position.x = Graphics::Width();
-    if (position.x > Graphics::Width()) 
         position.x = 0;
+    if (position.x > Graphics::Width())
+        position.x = Graphics::Width();
 
     if (position.y < 0) 
-        position.y = Graphics::Height();
-    if (position.y > Graphics::Height()) 
         position.y = 0;
+    if (position.y > Graphics::Height()) 
+        position.y = Graphics::Height();
     // Limit rotation to be within 0-360 degrees
     /*if (rotation >= 360.0f) rotation -= 360.0f;
 	if (rotation < 0.0f) rotation += 360.0f;*/

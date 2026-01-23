@@ -11,9 +11,12 @@ public:
 	float maxForce = 800.0f; // limit de reaction
 	float detectionAngleRad = 130.0f * (3.14159265f / 180.0f); // convert degrees to radians
 
+	float intervalAngleRad = 10.0f * (3.14159265f / 180.0f); // convert degrees to radians
+
 	float alignmentWeight = 2.0f;
 	float separationWeight = 2.5f;
 	float cohesionWeight = 1.0f;
+	float boundaryAvoidanceWeight = 3.0f;
 
 	bool _displayDebugTools = false;
 

@@ -45,7 +45,7 @@ void Application::Setup() {
 
     srand(time(NULL));
 	unique_ptr<Boid> rat;
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 40; i++) {
         rat = make_unique<Boid>(
             make_unique<Body>(
                 PolygonShape({

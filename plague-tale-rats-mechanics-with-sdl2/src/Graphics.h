@@ -29,4 +29,6 @@ struct Graphics {
     static void DrawPolygon(int x, int y, const std::vector<Vec2>& vertices, Uint32 color);
     static void DrawFillPolygon(int x, int y, const std::vector<Vec2>& vertices, Uint32 color);
     static void DrawTexture(int x, int y, int width, int height, float rotation, SDL_Texture* texture);
+
+	static bool IsInsideScreen(const Vec2& position);
 };
