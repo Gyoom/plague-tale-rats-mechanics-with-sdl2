@@ -1,9 +1,23 @@
 #include "Application.h"
+
 #include "Constants.h"
 #include <iostream>
 #include <string>
 #include <SDL_ttf.h>
 #include <SDL_image.h>
+#include "../Common.h"
+#include "Graphics.h"
+#include "World.h"
+#include "Boid.h"
+#include "../Rat.h"
+#include "Body.h"
+#include "Vec2.h"
+#include "../Grid.h"
+#include "../Swarm.h"
+#include "../Cell.h"
+#include "Shape.h"
+#include "Player.h"
+
 
 using namespace std;
 
@@ -18,52 +32,57 @@ void Application::Setup() {
     running = Graphics::OpenWindow();
 	
     world = make_unique<World>(0);
-    //world->grid = new Grid(50);
-
-	//Player* player = new Player(
- //       new PlayerBody(
- //           PolygonShape({
- //               Vec2(25, 0),
- //               Vec2(-10, 10),
- //               Vec2(-10, -10),
-	//			}),
- //           Vec2(Graphics::Width() / 2.0f, Graphics::Height() / 2.0f),
- //           1.0f,
- //           false
- //       ),
- //       "assets/player.png"
-	//);
- //   world->player = player;
-	//world->AddBody(player->body);
-	//srand(time(NULL));
-	//Vec2 dir = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f));
- //   world->player->body->velocity = dir * world->player->body->maxVelocity; // random initial velocity
-	//std::cout << "Player created with dir (" << dir.x << ", " << dir.y << ")\n";
-	//std::cout << "Player max velocity: " << world->player->body->maxVelocity << "\n";
-	//std::cout << "Player created with vel (" << world->player->body->velocity.x << ", " << world->player->body->velocity.y << ")\n";
-
-
     srand(time(NULL));
-	unique_ptr<Boid> rat;
-    for (int i = 0; i < 40; i++) {
-        rat = make_unique<Boid>(
-            make_unique<Body>(
+
+
+	// Create boids
+	//unique_ptr<Boid> rat;
+ //   for (int i = 0; i < 40; i++) {
+ //       rat = make_unique<Boid>(
+ //           make_unique<Body>(
+ //               PolygonShape({
+ //                   Vec2(25, 0),
+ //                   Vec2(-10, 10),
+ //                   Vec2(-10, -10),
+ //               }),
+ //               Vec2(rand() % Graphics::Width(), rand() % Graphics::Height()),
+ //               1.0f,
+ //               false
+ //           ),
+ //           "assets/rat.png",
+ //           i == 0
+ //       );
+	//	rat->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * rat->body->maxVelocity; // random initial velocity
+ //       world->boids.push_back(move(rat));
+ //       
+	//}
+
+    // Rats
+	world->grid = make_unique<Grid>(40);
+	world->swarm = make_unique<Swarm>();
+    unique_ptr<Rat> rat;
+    for (int i = 0; i < 200; i++) {
+        rat = make_unique<Rat>(
+            make_unique<GridBody>(
                 PolygonShape({
                     Vec2(25, 0),
                     Vec2(-10, 10),
                     Vec2(-10, -10),
-                }),
-                Vec2(rand() % Graphics::Width(), rand() % Graphics::Height()),
-                1.0f,
-                false
-            ),
+                    }),
+                    Vec2(world->grid->GetGridWidth() / 2.0f, world->grid->GetGridHeight() / 2.0f),
+                    1.0f,
+                    false
+                    ),
             "assets/rat.png",
-            i == 0
+            false
         );
-		rat->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * rat->body->maxVelocity; // random initial velocity
-        world->rats.push_back(move(rat));
-        
-	}
+        rat->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * rat->body->maxVelocity; // random initial velocity
+		world->rats.push_back(move(rat));
+		world->swarm->rats.push_back(world->rats.back().get());
+
+		
+    }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -154,22 +173,7 @@ void Application::Update() {
 ///////////////////////////////////////////////////////////////////////////////
 
 void Application::RenderBodies() {
-    for(auto& e : world->rats) {
-        e->Render();
-	}
-
-    /*if (world->grid != nullptr)
-    {
-        Graphics::DrawCircle(0, 0, 5, 0, 0xF90B00FF);
-        float cellSize = world->grid->GetCellSize();
-        for (auto cols : world->grid->GetCells()) {
-            for (auto cell : cols) {
-                Vec2 cellPos = cell->GetWorldPosition();
-                Graphics::DrawRect(cellPos.x, cellPos.y, cellSize, cellSize, 0x55555555);
-            }
-        }
-    }*/
-    
+	world->Render();
 }
 
 void Application::RenderText() {

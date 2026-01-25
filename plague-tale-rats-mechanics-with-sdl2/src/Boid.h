@@ -1,7 +1,9 @@
 #pragma once
 
-
+#include <vector>
 #include "Entity.h"
+
+class Body;
 
 class Boid : public Entity  
 {  

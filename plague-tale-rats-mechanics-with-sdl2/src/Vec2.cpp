@@ -95,6 +95,11 @@ float Vec2::Dist(const Vec2& v) const
 	
 }
 
+bool Vec2::Equals(const Vec2& v, float epsilon) const
+{
+	return (fabs(x - v.x) < epsilon) && (fabs(y - v.y) < epsilon);
+}
+
 Vec2& Vec2::operator = (const Vec2& v) {
 	x = v.x;
 	y = v.y;

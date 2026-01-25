@@ -2,8 +2,8 @@
 
 #include <SDL.h>
 #include <SDL2_gfxPrimitives.h>
-#include "Vec2.h"
 #include <vector>
+#include "Vec2.h"
 
 struct Graphics {
     static int windowWidth;

@@ -1,10 +1,14 @@
 
 #include "Boid.h"
 #include "World.h"
+#include "Body.h"
+#include "Graphics.h"
+#include "Vec2.h"
+
 
 Boid::Boid(std::unique_ptr<Body> body, const char* textureFileName, bool displayDebugTools) : Entity(std::move(body), textureFileName)
 {
-	type = RAT;
+	type = BOID;
 	_displayDebugTools = displayDebugTools;
 }
 
@@ -16,7 +20,7 @@ void Boid::Update(float dt)
 {
 	// Detect neighboring rats within detection radius
 	neighbors.clear();
-	for (auto& r : World::instance->rats)
+	for (auto& r : World::instance->boids)
 	{
         if (r.get() != this && r->body->position.Dist(body->position) < detectionRadius)
         {

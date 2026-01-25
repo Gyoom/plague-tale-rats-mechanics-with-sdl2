@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "World.h"
+#include "Body.h"
 
 Player::Player(std::unique_ptr<Body> body, const char* textureFileName): Entity(std::move(body), textureFileName)
 {

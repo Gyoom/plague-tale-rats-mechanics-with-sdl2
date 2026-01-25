@@ -97,6 +97,15 @@
     <ClCompile Include="Cell.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
+    <ClCompile Include="rat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="swarm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\SDL2_gfx\SDL_ttf.h">
@@ -154,6 +163,15 @@
       <Filter>Header Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="Cell.h">
+      <Filter>Header Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="rat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="swarm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
   </ItemGroup>

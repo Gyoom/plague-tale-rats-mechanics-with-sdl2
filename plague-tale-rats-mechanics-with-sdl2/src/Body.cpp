@@ -1,8 +1,13 @@
-﻿#include "Graphics.h"
+﻿
 #include "Body.h"
-#include <math.h>
+
 #include <iostream>
+#include <math.h>
+#include "Graphics.h"
 #include "World.h"
+#include "Vec2.h"
+#include "Shape.h"
+#include "../Grid.h"
 
 // Base Body class implementation
 
@@ -31,7 +36,6 @@ Body::Body(const Shape& shape, Vec2 pos, float mass, bool canCollide) {
     } else {
         this->invI = 0.0;
     }
-	maxVelocity = 300.0f;
 	World::instance->AddBody(this);
 }
 
@@ -162,3 +166,53 @@ void Body::Render() {
 }
 
 
+// GridBody class implementation
+
+GridBody::GridBody(const Shape& shape, Vec2 pos, float mass, bool canCollide) : Body(shape, pos, mass, canCollide)
+{
+}
+
+void GridBody::IntegrateLinear(float dt) {
+    if (IsStatic()) {
+        return;
+    }
+
+    acceleration = sumForces * invMass;
+
+    velocity += acceleration * dt;
+
+    // 🔑 DRAG
+    velocity *= std::exp(-linearDrag * dt);
+
+    // 🔑 SPEED LIMIT
+    velocity = Vec2::ClampMag(velocity, _effectiveMaxVelocity, _effectiveMinVelocity);
+
+    position += velocity * dt;
+
+    if (velocity.MagnitudeSquared() > 0.0001f)
+    {
+        forward = velocity;
+        forward.Normalize();
+        rotation = atan2(forward.y, forward.x);
+    }
+
+    ClearForces();
+}
+
+void GridBody::CheckLimits()
+{
+	Grid* grid = World::instance->grid.get();
+
+	float gridWidth = grid->GetColsCount() * grid->GetCellSize() - (1 + grid->GetCellSize());
+    float gridHeight = grid->GetRowsCount() * grid->GetCellSize() - (1 + grid->GetCellSize());
+
+    if (position.x < grid->GetCellSize())
+        position.x = grid->GetCellSize();
+    if (position.x > gridWidth)
+        position.x = gridWidth;
+    if (position.y < grid->GetCellSize())
+        position.y = grid->GetCellSize();
+    if (position.y > gridHeight)
+		position.y = gridHeight;
+
+}

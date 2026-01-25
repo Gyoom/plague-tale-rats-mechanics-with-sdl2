@@ -28,6 +28,8 @@ struct Vec2 {
     float Cross(const Vec2& v) const;        // v1.Cross(v2)
     float Dist(const Vec2& v) const;
 
+	bool Equals(const Vec2& v, float epsilon = 0.0001f) const; // v1.Equals(v2)
+
     Vec2& operator = (const Vec2& v);        // v1 = v2
     bool operator == (const Vec2& v) const;  // v1 == v2
     bool operator != (const Vec2& v) const;  // v1 != v2

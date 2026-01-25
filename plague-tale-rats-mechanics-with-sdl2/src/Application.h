@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Graphics.h"
-#include "World.h"
 #include <vector>
 #include <SDL_ttf.h>
+#include <memory>
+#include "World.h"
 
 
 class Application {

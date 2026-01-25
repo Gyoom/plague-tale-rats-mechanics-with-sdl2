@@ -3,9 +3,9 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Vec2.h"
-#include "Shape.h"
 
 class Entity;
+class Shape;
 
 class Body {
 public:
@@ -13,8 +13,12 @@ public:
 	bool canCollide = true;
 
 	Vec2 forward = Vec2(-1.0f, 0.0f);
-    float maxVelocity = 600.0f; // limit de vitesse
-	float minVelocity = 340.0f; // limit de vitesse
+    float maxVelocity = 300.0f; // limit de vitesse
+    float minVelocity = 200.0f;
+
+    float _effectiveMaxVelocity = maxVelocity; // limit de vitesse
+    float _effectiveMinVelocity = minVelocity;
+    
 	float linearDrag = 0;
 
     // Linear motion
@@ -65,12 +69,24 @@ public:
     void ApplyImpulse(const Vec2& j);
     void ApplyImpulse(const Vec2& j, const Vec2& r);
 
-    void IntegrateLinear(float dt);
+    virtual void IntegrateLinear(float dt);
     void IntegrateAngular(float dt);
 
-	void CheckLimits();
+	virtual void CheckLimits();
 
     virtual void Update(float dt);
 
 	virtual void Render();
+};
+
+class GridBody : public Body {
+
+public:
+
+    
+	GridBody(const Shape& shape, Vec2 pos, float mass, bool canCollide = true);
+	~GridBody() = default;
+
+	virtual void IntegrateLinear(float dt) override;
+    void CheckLimits() override;
 };

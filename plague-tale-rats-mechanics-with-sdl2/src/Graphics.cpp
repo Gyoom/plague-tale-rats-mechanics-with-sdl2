@@ -1,5 +1,6 @@
 #include "Graphics.h"
 #include <iostream>
+#include "Vec2.h"
 
 SDL_Window* Graphics::window = NULL;
 SDL_Renderer* Graphics::renderer = NULL;

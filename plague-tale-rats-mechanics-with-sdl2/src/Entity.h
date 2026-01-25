@@ -1,20 +1,21 @@
 #pragma once
 
-#include "Graphics.h"
-#include "Vec2.h"
-#include "Body.h"
 #include <vector>  
 #include <iostream>  
+#include "Vec2.h"
 
+class Body;
 
 enum EntityType {
 	ENTITY,
 	RAT,
+	BOID,
 	PLAYER,
 	LIGHT_SOURCE,
 };
 
 class Entity { 
+
 public:
   std::unique_ptr<Body> body;  
   EntityType type;

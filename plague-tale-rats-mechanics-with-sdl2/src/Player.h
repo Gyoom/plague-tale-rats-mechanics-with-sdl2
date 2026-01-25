@@ -2,6 +2,8 @@
 
 #include "Entity.h"
 
+class Body;
+
 class Player : public Entity
 {
 public:

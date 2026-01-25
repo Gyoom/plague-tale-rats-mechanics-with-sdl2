@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Vec2.h"
 #include <vector>
+#include "Vec2.h"
+
 
 enum ShapeType {
     CIRCLE,

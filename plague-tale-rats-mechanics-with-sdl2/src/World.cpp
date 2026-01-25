@@ -3,12 +3,21 @@
 #include "Graphics.h"
 #include <iostream>
 
+#include "Body.h"
+#include "Player.h"
+#include "../Grid.h"
+#include "../Swarm.h"
+#include "../Rat.h"
+#include "Boid.h"    
+#include "../Cell.h"
+
 World* World::instance = nullptr;
 
 World::World(float gravity) {
     G = -gravity;
     std::cout << "Creating World" << std::endl;
 
+	// Singleton pattern
     if (World::instance == nullptr) {
         World::instance = this;
     } else {
@@ -65,6 +74,16 @@ void World::bodiesUpdate(float dt) {
 
 void World::Update(float dt) 
 {
+    for (auto& e : boids) {
+        e->Update(dt);
+    }
+
+    if (grid)
+		grid->Update(dt);
+
+	if (swarm)
+		swarm->Update(dt);
+
     for (auto& e : rats) {
         e->Update(dt);
     }
@@ -78,4 +97,23 @@ void World::VerletCollisionsEffects(Body* a, Body* b)
 
 void World::CheckCollisions() { // Narrow type only
     
+}
+
+void World::Render() {
+    // boids
+    for (auto& e : boids) {
+        e->Render();
+    }
+	// rats
+    if (grid) {
+        grid->Render();
+	}
+
+    if (swarm)
+        swarm->Render();
+
+    for (auto& r : rats) {
+        r->Render();
+
+    }
 }

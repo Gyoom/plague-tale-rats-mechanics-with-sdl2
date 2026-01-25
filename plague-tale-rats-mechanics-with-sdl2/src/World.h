@@ -1,11 +1,17 @@
 #pragma once
 
-#include "../Grid.h"
-#include "Body.h"
-#include "Player.h"
-#include "Boid.h"
-#include "Vec2.h"
 #include <vector>
+#include <memory>
+#include <SDL.h>
+
+#include "Vec2.h"
+
+class Swarm;
+class Rat;
+class Player;
+class Boid;
+class Body;
+class Grid;
 
 class World {
     private:
@@ -20,9 +26,16 @@ class World {
     public:
 		static World* instance;
         SDL_Texture* bgTexture = nullptr;
+
         std::unique_ptr<Player> player = nullptr;
-		std::vector<std::unique_ptr<Boid>> rats;
+        
+        // boids
+		std::vector<std::unique_ptr<Boid>> boids;
+
+		// Rats
         std::unique_ptr<Grid> grid = nullptr;
+		std::unique_ptr<Swarm> swarm = nullptr;
+		std::vector<std::unique_ptr<Rat>> rats;
 
         World(float gravity);
         ~World();
@@ -38,4 +51,6 @@ class World {
 
 		void VerletCollisionsEffects(Body* a, Body* b);
         void CheckCollisions();
+
+		void Render();
 };
