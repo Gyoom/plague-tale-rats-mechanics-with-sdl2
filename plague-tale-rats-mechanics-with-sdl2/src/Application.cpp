@@ -17,6 +17,7 @@
 #include "../Cell.h"
 #include "Shape.h"
 #include "Player.h"
+#include "../Light.h"
 
 
 using namespace std;
@@ -33,6 +34,31 @@ void Application::Setup() {
 	
     world = make_unique<World>(0);
     srand(time(NULL));
+
+
+	// Create player
+    world->player = make_unique<Player>(
+            make_unique<Body>(
+                PolygonShape({
+                    Vec2(30, 0),
+                    Vec2(-15, 15),
+                    Vec2(-15, -15),
+                }),
+                Vec2(Graphics::Width() / 2.0f, Graphics::Height() * 0.8f),
+                1.0f,
+				0.0f,
+				300.0f,
+                3,
+                false
+            ),
+            "assets/player_ship.png"
+	);
+	world->player->body->_color = 0xFF00FF00;
+	world->player->body->forward = Vec2(0.0f, -1.0f);
+	world->player->body->rotation = -M_PI / 2.0f;
+
+	// Create light
+	world->light = make_unique<Light>(world->player->body->position, 200.0f, 0.8f);
 
 
 	// Create boids
@@ -71,16 +97,17 @@ void Application::Setup() {
                     }),
                     Vec2(world->grid->GetGridWidth() / 2.0f, world->grid->GetGridHeight() / 2.0f),
                     1.0f,
+					200.0f,
+					300.0f,
+                    0,
                     false
                     ),
             "assets/rat.png",
-            false
+			i == 0 // display debug tools for the first rat only
         );
         rat->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * rat->body->maxVelocity; // random initial velocity
 		world->rats.push_back(move(rat));
 		world->swarm->rats.push_back(world->rats.back().get());
-
-		
     }
 
 }
@@ -91,6 +118,8 @@ void Application::Setup() {
 void Application::Input() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
+
+
         switch (event.type) {
            case SDL_QUIT:
                 running = false;
@@ -99,18 +128,50 @@ void Application::Input() {
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_ESCAPE)
                     running = false;
-                if (event.key.keysym.sym == SDLK_d)
+                if (event.key.keysym.sym == SDLK_F1)
                     debug = !debug;
                 if (event.key.keysym.sym == SDLK_r) {
                     reload = true;
                     running = false;
                 }
+                if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_q) {
+					world->player->_movementDirection.x = -1.0f;
+				}
+				if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d) {
+					world->player->_movementDirection.x = 1.0f;
+				}
+				if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_z) {
+					world->player->_movementDirection.y = -1.0f;
+				}
+				if (event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_s) {
+					world->player->_movementDirection.y = 1.0f;
+				}
+
                 break;
+
+			case SDL_KEYUP:
+                if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_q) {
+					if (world->player->_movementDirection.x < 0.0f)
+                        world->player->_movementDirection.x = 0.0f;
+                }
+                if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d) {
+					if (world->player->_movementDirection.x > 0.0f)
+                        world->player->_movementDirection.x = 0.0f;
+                }
+                if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_z) {
+                   if (world->player->_movementDirection.y < 0.0f)
+					   world->player->_movementDirection.y = 0.0f;
+                }
+                if (event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_s) {
+					if (world->player->_movementDirection.y > 0.0f)
+						world->player->_movementDirection.y = 0.0f;
+                }
+				break;
 
             
             case SDL_MOUSEBUTTONDOWN:
-                if (event.button.button == SDL_BUTTON_LEFT) {
-                    /*int x, y;
+                /*if (event.button.button == SDL_BUTTON_LEFT) {
+                    int x, y;
                     SDL_GetMouseState(&x, &y);
                     Vec2 mousePos = Vec2(x, y);
 
@@ -118,13 +179,9 @@ void Application::Input() {
 
 					Vec2 direction = mousePos - playerPos;
 					direction.Normalize();
-					world->player->body->AddForce(direction * 50000);*/
+					world->player->body->AddForce(direction * 50000);
 					
-                }
-
-                if (event.button.button == SDL_BUTTON_RIGHT) {
-					world->player->body->AddTorque(20000);
-                }
+                }*/
 
                /* if (event.button.button == SDL_BUTTON_LEFT) {
                     int x, y;

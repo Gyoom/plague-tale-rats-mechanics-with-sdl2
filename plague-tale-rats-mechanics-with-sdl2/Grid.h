@@ -14,8 +14,6 @@ private:
 	int cols;
 	int rows;
 
-	bool _distanceToObstaclePreview = false;
-
 public:
 	Grid(int cellSize);
 	~Grid() = default;

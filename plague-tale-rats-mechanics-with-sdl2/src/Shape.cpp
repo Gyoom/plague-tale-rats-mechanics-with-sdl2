@@ -34,9 +34,9 @@ float CircleShape::GetMomentOfInertia() const {
     return 0.5 * (radius * radius);
 }
 
-void CircleShape::DebugRender(Vec2 position) const
+void CircleShape::DebugRender(Vec2 position, Uint32 color) const
 {
-    Graphics::DrawCircle(position.x, position.y, radius, 0.0f, 0xFFFFFFFF);
+    Graphics::DrawCircle(position.x, position.y, radius, 0.0f, color);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -122,9 +122,9 @@ void PolygonShape::UpdateVertices(float angle, const Vec2& position) {
     }
 }
 
-void PolygonShape::DebugRender(Vec2 position) const
+void PolygonShape::DebugRender(Vec2 position, Uint32 color) const
 {
-    Graphics::DrawPolygon(position.x, position.y, worldVertices, 0xFFFFFFFF);
+    Graphics::DrawPolygon(position.x, position.y, worldVertices, color);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

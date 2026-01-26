@@ -18,21 +18,23 @@ public:
 
     float _effectiveMaxVelocity = maxVelocity; // limit de vitesse
     float _effectiveMinVelocity = minVelocity;
+
+	Uint32 _color = 0xFFFFFFFF;  
     
-	float linearDrag = 0;
+	float _linearDrag = 0;
 
     // Linear motion
-    Vec2 position;
-    Vec2 velocity;
-    Vec2 acceleration;
+	Vec2 position;
+	Vec2 velocity;
+	Vec2 acceleration;
 
     // Angular motion
-    float rotation;
+	float rotation;
     float angularVelocity;
     float angularAcceleration;
     
     // Forces and torque
-    Vec2 sumForces;
+	Vec2 sumForces;
     float sumTorque;
 
     // Mass and Moment of Inertia
@@ -54,7 +56,7 @@ public:
     SDL_Texture* texture = nullptr;
 
     Body() = default;
-    Body(const Shape& shape, Vec2 pos, float mass, bool canCollide = true);
+    Body(const Shape& shape, Vec2 pos, float mass, float minVel, float maxVel, float linearDrag, bool canCollide = true);
     ~Body();
 
     bool IsStatic() const;
@@ -84,7 +86,7 @@ class GridBody : public Body {
 public:
 
     
-	GridBody(const Shape& shape, Vec2 pos, float mass, bool canCollide = true);
+	GridBody(const Shape& shape, Vec2 pos, float mass, float minVel, float maxVel, float linearDrag, bool canCollide = true);
 	~GridBody() = default;
 
 	virtual void IntegrateLinear(float dt) override;

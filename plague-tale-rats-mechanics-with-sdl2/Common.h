@@ -32,5 +32,11 @@ public:
 		return (A << 24) | (R << 16) | (G << 8) | B;
 	}
 
+	static float clamp(float value, float min, float max) {
+		if (value < min) return min;
+		if (value > max) return max;
+		return value;
+	}
+
 };
 

@@ -4,6 +4,7 @@
 
 class Cell;
 class GridBody;
+class Player;
 
 class Rat : public Entity
 {
@@ -16,12 +17,15 @@ public:
 
 	float _minVelocity = 100.0f;
 
+	Player* _target = nullptr;
+
 	Rat() = default;
 	Rat(std::unique_ptr<GridBody> body, const char* textureFileName, bool displayDebugTools);
 	~Rat() = default;
 
 	std::vector<Cell*> GetDetectedCells() const;
 	float GetForwardObstacleFactor() const;
+	float AttackSpeed(float dist, float attackRange) const;
 
 	void Update(float dt) override;
 	void Render() override;

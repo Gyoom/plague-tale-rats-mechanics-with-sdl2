@@ -66,6 +66,12 @@ float Rat::GetForwardObstacleFactor() const
 	return obstacleDist;
 }
 
+float Rat::AttackSpeed(float dist, float attackRange) const
+{
+	if (dist > attackRange) return body->_effectiveMaxVelocity;
+	return body->_effectiveMaxVelocity * (dist / attackRange);
+}
+
 void Rat::Update(float dt)
 {
 	Entity::Update(dt);

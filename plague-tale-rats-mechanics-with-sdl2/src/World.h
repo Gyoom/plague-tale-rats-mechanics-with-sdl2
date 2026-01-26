@@ -12,6 +12,7 @@ class Player;
 class Boid;
 class Body;
 class Grid;
+class Light;
 
 class World {
     private:
@@ -28,6 +29,7 @@ class World {
         SDL_Texture* bgTexture = nullptr;
 
         std::unique_ptr<Player> player = nullptr;
+		std::unique_ptr<Light> light = nullptr;
         
         // boids
 		std::vector<std::unique_ptr<Boid>> boids;

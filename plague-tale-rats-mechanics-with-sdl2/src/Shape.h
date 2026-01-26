@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Vec2.h"
+#include <SDL.h>
 
 
 enum ShapeType {
@@ -17,7 +18,7 @@ public:
     virtual Shape* Clone() const = 0;
     virtual void UpdateVertices(float angle, const Vec2& position) = 0;
     virtual float GetMomentOfInertia() const = 0;
-    virtual void DebugRender(Vec2 position) const = 0;
+    virtual void DebugRender(Vec2 position, Uint32 color) const = 0;
 };
 
 class CircleShape: public Shape {
@@ -31,7 +32,7 @@ public:
     void UpdateVertices(float angle, const Vec2& position) override;
     float GetMomentOfInertia() const override;
 
-    void DebugRender(Vec2 position) const override;
+    void DebugRender(Vec2 position, Uint32 color) const override;
 };
 
 class PolygonShape: public Shape {
@@ -48,7 +49,7 @@ public:
     float FindMinSeparation(const PolygonShape* other, Vec2& axis, Vec2& point) const;
     float GetMomentOfInertia() const override;
     void UpdateVertices(float angle, const Vec2& position) override;
-    void DebugRender(Vec2 position) const override;
+    void DebugRender(Vec2 position, Uint32 color) const override;
 };
 
 class BoxShape : public PolygonShape { // child class of PolygonShape

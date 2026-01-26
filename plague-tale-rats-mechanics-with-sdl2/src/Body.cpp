@@ -11,20 +11,28 @@
 
 // Base Body class implementation
 
-Body::Body(const Shape& shape, Vec2 pos, float mass, bool canCollide) {
+Body::Body(const Shape& shape, Vec2 pos, float mass, float minVel, float maxVel, float linearDrag, bool canCollide) {
     this->shape = shape.Clone();
     this->position = pos;
-    this->velocity = Vec2(0, 0);
+    this->mass = mass;
+	this->maxVelocity = maxVel;
+	this->minVelocity = minVel;
+	this->_linearDrag = linearDrag;
+    this->canCollide = canCollide;
+
+    this->sumForces = Vec2(0, 0);
     this->acceleration = Vec2(0, 0);
+    this->velocity = Vec2(0, 0);
+    
     this->rotation = 0.0;
     this->angularVelocity = 0.0;
     this->angularAcceleration = 0.0;
-    this->sumForces = Vec2(0, 0);
+    
     this->sumTorque = 0.0;
     this->restitution = 1.0;
     this->friction = 0.7;
-    this->mass = mass;
-	this->canCollide = canCollide;
+    
+	
     if (mass != 0.0) {
         this->invMass = 1.0 / mass;
     } else {
@@ -91,17 +99,18 @@ void Body::IntegrateLinear(float dt) {
     if (IsStatic()) {
         return;
     }
-
+	
     acceleration = sumForces * invMass;
 
     velocity += acceleration * dt;
 
     // 🔑 DRAG
-    velocity *= std::exp(-linearDrag * dt);
+    velocity *= std::exp(-_linearDrag * dt);
 
     // 🔑 SPEED LIMIT
     velocity = Vec2::ClampMag(velocity, maxVelocity, minVelocity);
 
+   
     position += velocity * dt;
 
     if (velocity.MagnitudeSquared() > 0.0001f)
@@ -162,13 +171,13 @@ void Body::Update(float dt) {
 void Body::Render() {
 
     if (Graphics::debugMode || texture == nullptr)
-	    shape->DebugRender(position);
+	    shape->DebugRender(position, _color);
 }
 
 
 // GridBody class implementation
 
-GridBody::GridBody(const Shape& shape, Vec2 pos, float mass, bool canCollide) : Body(shape, pos, mass, canCollide)
+GridBody::GridBody(const Shape& shape, Vec2 pos, float mass, float minVel, float maxVel, float linearDrag, bool canCollide) : Body(shape, pos, mass, minVel, maxVel, linearDrag, canCollide)
 {
 }
 
@@ -182,7 +191,7 @@ void GridBody::IntegrateLinear(float dt) {
     velocity += acceleration * dt;
 
     // 🔑 DRAG
-    velocity *= std::exp(-linearDrag * dt);
+    velocity *= std::exp(-_linearDrag * dt);
 
     // 🔑 SPEED LIMIT
     velocity = Vec2::ClampMag(velocity, _effectiveMaxVelocity, _effectiveMinVelocity);

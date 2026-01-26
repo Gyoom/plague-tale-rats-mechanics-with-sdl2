@@ -10,6 +10,7 @@
 #include "../Rat.h"
 #include "Boid.h"    
 #include "../Cell.h"
+#include "../Light.h"
 
 World* World::instance = nullptr;
 
@@ -81,12 +82,20 @@ void World::Update(float dt)
     if (grid)
 		grid->Update(dt);
 
+	if (light)
+		light->Update(dt);
+
+    if (player)
+        player->Update(dt);
+
 	if (swarm)
 		swarm->Update(dt);
 
     for (auto& e : rats) {
         e->Update(dt);
     }
+
+    
 	//World::bodiesUpdate(dt);
 }
 
@@ -104,16 +113,22 @@ void World::Render() {
     for (auto& e : boids) {
         e->Render();
     }
-	// rats
+    // rats
     if (grid) {
         grid->Render();
-	}
+    }
+
+    if (light)
+		light->Render();
+
+    if (player)
+        player->Render();
+        
 
     if (swarm)
         swarm->Render();
 
     for (auto& r : rats) {
         r->Render();
-
     }
 }

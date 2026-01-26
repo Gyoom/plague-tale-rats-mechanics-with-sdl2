@@ -8,6 +8,7 @@
 #include "common.h"
 
 #include <iostream>
+#include "src/Constants.h"
 
 using namespace std;
 
@@ -206,7 +207,7 @@ void Grid::Render()
 	}
 
 	// Draw distance to obstacle preview
-	if (_distanceToObstaclePreview)
+	if (DISPLAY_OBSTACLE_CELLS_GRADIENT)
 	{
 		for (auto& column : cells) {
 			for (auto& cell : column) {

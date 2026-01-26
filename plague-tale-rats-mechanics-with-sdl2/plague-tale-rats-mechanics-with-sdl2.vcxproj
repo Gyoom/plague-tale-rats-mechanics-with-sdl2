@@ -145,6 +145,7 @@
     <ClCompile Include="lib\SDL2_gfx\SDL2_imageFilter.c" />
     <ClCompile Include="lib\SDL2_gfx\SDL2_rotozoom.c" />
     <ClCompile Include="lib\SDL2_gfx\SDL_ttf.c" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="rat.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Body.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="lib\SDL2_gfx\SDL2_imageFilter.h" />
     <ClInclude Include="lib\SDL2_gfx\SDL2_rotozoom.h" />
     <ClInclude Include="lib\SDL2_gfx\SDL_ttf.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="rat.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Body.h" />
