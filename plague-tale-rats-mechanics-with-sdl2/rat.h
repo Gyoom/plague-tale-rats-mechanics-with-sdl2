@@ -5,11 +5,17 @@
 class Cell;
 class GridBody;
 class Player;
+class Light;
 
 class Rat : public Entity
 {
 public:
 	bool _displayDebugTools = false;
+	bool _isInLight = false;
+	float _lightTimer = 0.0f;
+	float _repelTimer = 0.0f;
+	float _repelDuration = 0.5f;
+	float _lightResistanceDuration = 0.2f;
 
 	float _maxForce = 800.0f; // limit de reaction
 	float _maxForceAttackMultiplier = 2.0f;
@@ -25,6 +31,9 @@ public:
 	float _w_cohesion_target_min = 0.2f;
 
 	Player* _target = nullptr;
+	Light* _lightSource = nullptr;
+
+	bool _pendingKill = false;
 
 	Rat() = default;
 	Rat(std::unique_ptr<GridBody> body, const char* textureFileName, bool displayDebugTools);
@@ -35,5 +44,7 @@ public:
 
 	void Update(float dt) override;
 	void Render() override;
+
+	void EndRepelFromLight();
 };
 

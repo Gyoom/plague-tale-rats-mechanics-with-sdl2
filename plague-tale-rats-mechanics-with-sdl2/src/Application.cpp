@@ -36,7 +36,7 @@ void Application::Setup() {
     srand(time(NULL));
 
 	// Create boids
-	unique_ptr<Boid> boid;
+	/*unique_ptr<Boid> boid;
     for (int i = 0; i < 100; i++) {
         boid = make_unique<Boid>(
             make_unique<Body>(
@@ -57,9 +57,9 @@ void Application::Setup() {
         );
 		boid->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * boid->body->maxVelocity; // random initial velocity
         world->boids.push_back(move(boid));
-	}
+	}*/
 
-    /*
+    
     // Rats
 	world->grid = make_unique<Grid>(40);
 
@@ -85,19 +85,38 @@ void Application::Setup() {
     world->player->body->rotation = -M_PI / 2.0f;
 
     // Create light
-    world->light = make_unique<Light>(world->player->body->position, 200.0f, 0.8f);
+    world->light = make_unique<Light>(world->player->body->position, 300.0f, 250.0f, 200.0f);
 
 	// Create swarms
-    for (int i = 0; i < 1; i++) {
-        world->swarms.push_back(
-            make_unique<Swarm>(
-                50,
-                Vec2(Graphics::Width() / 2.0f, Graphics::Height() * 0.25f),
-                true
-            )
-        );
-    }
-    */
+    world->swarms.push_back(
+        make_unique<Swarm>(
+            100,
+            Vec2(Graphics::Width() * 0.12f, Graphics::Height() * 0.78f),
+            true,
+            1.0f,
+            false
+        )
+    );
+
+    world->swarms.push_back(
+        make_unique<Swarm>(
+            200,
+            Vec2(Graphics::Width() * 0.75f, Graphics::Height() * 0.25f),
+            true,
+            1.0f,
+            false
+        )
+    );
+
+    world->swarms.push_back(
+        make_unique<Swarm>(
+            50,
+            Vec2(Graphics::Width() * 0.4f, Graphics::Height() * 0.25f),
+            false,
+            1.0f,
+            true
+        )
+    );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -14,10 +14,11 @@
 
 using namespace std;
 
-Swarm::Swarm(int ratCount, Vec2 pos, bool fixed)
+Swarm::Swarm(int ratCount, Vec2 pos, bool fixed, float cohesionRadiusFactor, bool debugActive)
 {
 	position = pos;
 	this->fixed = fixed;
+	_w_cohesion_radius_factor = cohesionRadiusFactor;
 	
 
 	cohesionRadius = static_cast<float>(ratCount) * _w_cohesion_radius_factor;
@@ -25,7 +26,7 @@ Swarm::Swarm(int ratCount, Vec2 pos, bool fixed)
 	
 	World* world = World::instance;
 	unique_ptr<Rat> rat;
-	for (int i = 0; i < 200; i++) {
+	for (int i = 0; i < ratCount; i++) {
 		rat = make_unique<Rat>(
 			make_unique<GridBody>(
 				PolygonShape({
@@ -44,11 +45,17 @@ Swarm::Swarm(int ratCount, Vec2 pos, bool fixed)
 					false
 					),
 			"assets/rat.png",
-			i == 0 // display debug tools for the first rat only
+			debugActive && i == 0 // display debug tools for the first rat only
 		);
+
+		if (debugActive && i == 0)
+			rat->body->_color = 0xFFFFFF00; // yellow for the debug rat
+
 		rat->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * rat->body->maxVelocity; // random initial velocity
 		world->rats.push_back(move(rat));
 		rats.push_back(world->rats.back().get());
+
+		
 	}
 
 	
@@ -78,8 +85,7 @@ void Swarm::Update(float dt)
 			float t = dist / cohesionRadius;
 
 			// Cohésion exponentielle after a certain distance
-			float cohesionSharpness = 4.0f;
-			float strength = std::exp((t - 1.0f) * cohesionSharpness);
+			float strength = std::exp((t - 1.0f) * _cohesion_sharpness);
 
 			Vec2 cohesionForce = dir * strength;
 
@@ -87,13 +93,10 @@ void Swarm::Update(float dt)
 			cohesionForce *= _w_cohesion;
 			cohesionForce *= rat->_w_cohesion_target;
 			rat->body->AddForce(cohesionForce);
-
-			if (rat->_displayDebugTools)
-			{
-				std::cout << "Cohesion force applied: (" << cohesionForce.Magnitude() << ")\n";
-			}
 		}
 	}
+
+	
 
 }
 
@@ -120,4 +123,20 @@ void Swarm::Render()
 		);
 	}
 	
+}
+
+void Swarm::RemoveDeadRats()
+{
+	// Remove dead rats from the swarm
+	rats.erase(
+		std::remove_if(
+			rats.begin(),
+			rats.end(),
+			[](Rat* r)
+			{
+				return r->_pendingKill;
+			}
+		),
+		rats.end()
+	);
 }

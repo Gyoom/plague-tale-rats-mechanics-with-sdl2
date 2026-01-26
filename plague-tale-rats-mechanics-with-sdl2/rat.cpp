@@ -6,6 +6,9 @@
 #include "src/Vec2.h"
 #include "src/Body.h"
 #include "Grid.h"
+#include "Swarm.h"
+#include "src/Constants.h"
+#include "Light.h"
 
 Rat::Rat(std::unique_ptr<GridBody> body, const char* textureFileName, bool displayDebugTools) : Entity(std::move(body), textureFileName)
 {
@@ -68,10 +71,43 @@ float Rat::GetForwardObstacleFactor() const
 
 void Rat::Update(float dt)
 {
+	// Handle light exposure effects
+	if (_isInLight)
+	{
+		_lightTimer += dt;
+		if (_lightTimer >= _lightResistanceDuration && body->_color != 0xFF0000FF)
+		{
+			if (DELETE_RAT_ON_LIGHT_EXPOSURE && !_displayDebugTools)
+			{
+				_pendingKill = true;
+				
+			}
+				
+			else
+				body->_color = 0xFF0000FF;
+		}
+	}
+	// Reset light state after processing
+	if (_lightSource)
+	{
+		Vec2 toLight = (_lightSource->position - this->body->position).Normalize();
+		float alignment = this->body->velocity.Dot(toLight);
+		if (alignment > 0.0f)
+			EndRepelFromLight();
+	}
+
+
 	Entity::Update(dt);
 }
 
 void Rat::Render()
 {
 	Entity::Render();
+}
+
+void Rat::EndRepelFromLight()
+{
+	body->fowardLocked = false;
+	body->_dragEnabled = true;
+	_lightSource = nullptr;
 }

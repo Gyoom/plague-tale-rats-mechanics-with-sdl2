@@ -12,6 +12,7 @@ public:
     bool isColliding = false;
 	bool canCollide = true;
 
+	bool fowardLocked = false;
 	Vec2 forward = Vec2(-1.0f, 0.0f);
     float maxVelocity; // limit de vitesse
     float minVelocity;
@@ -20,7 +21,9 @@ public:
 
 	Uint32 _color = 0xFFFFFFFF;  
     
+	bool _dragEnabled = true;
 	float _linearDrag;
+	float _effectiveLinearDrag;
 
     // Linear motion
 	Vec2 position;
@@ -35,6 +38,7 @@ public:
     // Forces and torque
 	Vec2 sumForces;
     float sumTorque;
+	Vec2 sumImpulse;
 
     // Mass and Moment of Inertia
     float mass;
@@ -62,6 +66,7 @@ public:
 
     void AddForce(const Vec2& force);
     void AddTorque(float torque);
+	void AddImpulse(const Vec2& impulse);
     void ClearForces();
     void ClearTorque();
 

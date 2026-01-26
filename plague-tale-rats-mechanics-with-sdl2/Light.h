@@ -7,11 +7,16 @@ class Light
 {
 public:
 	Vec2 position;
-	float radius;
-	float percentageDeadRadius; // 0.0 to 1.0
+	float awayRadius;
+	float midRadius;
+	float closeRadius;
 	std::vector <Cell*> affectedCellsPositions;
 
-	Light(Vec2 pos, float r, float deadRadius);
+	float _w_lightRepulsion = 1.0f;
+	float _maxLightDrag = 100.0f;
+	float lightKickImpulse = 700.0f;
+
+	Light(Vec2 pos, float away, float mid, float close);
 	~Light() = default;
 
 	void Update(float dt);

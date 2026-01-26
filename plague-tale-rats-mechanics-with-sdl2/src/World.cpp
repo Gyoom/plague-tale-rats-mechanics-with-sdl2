@@ -55,10 +55,6 @@ void World::AddTorque(float torque) {
 void World::RatsUpdate(float dt)
 {
 	for (auto& rat : rats) {
-		if (rat->_displayDebugTools)
-		{
-			std::cout << "rat Velocity: " << rat->body->velocity.Magnitude() << "\n";
-		}
 
 		// Attraction to neighbor cells
 		Vec2 cellLogicalPos = World::instance->grid->GetCellLogicalPosition(rat->body->position);
@@ -72,11 +68,6 @@ void World::RatsUpdate(float dt)
 		steering = Vec2::ClampMag(steering, rat->_maxForce);
 		steering *= _w_attractiveness;
 		rat->body->AddForce(steering);
-
-		if (rat->_displayDebugTools)
-		{
-			std::cout << "Neigbors force applied: (" << steering.Magnitude() << ")\n";
-		}
 
 		// Debug tools for cell attractiveness
 		if (rat->_displayDebugTools && DISPLAY_CELLS_ATTRACTIVENESS) {
@@ -110,10 +101,6 @@ void World::RatsUpdate(float dt)
 			rat->_w_cohesion_target = Common::lerp(rat->_w_cohesion_target_min, 1.0f, closeness);
 			rat->body->_desiredVelocity = Common::lerp(rat->_attackVelocity, rat->_restVelocity, closeness);
 
-			if (rat->_displayDebugTools)
-			{
-				std::cout << "Pursue force applied: (" << pursueForce.Magnitude() << ")\n";
-			}
 		}
 		else
 		{
@@ -125,24 +112,33 @@ void World::RatsUpdate(float dt)
 		Vec2 separation = Vec2(0, 0);
 		for (auto& other : rats)
 		{
+			if (other.get() == rat.get())
+				continue;
+
 			Vec2 toOther = rat->body->position - other->body->position;
 			float OtherLength = toOther.MagnitudeSquared();
 
+			// avoid division by zero if two rats are exactly at the same position
+			if (OtherLength < 0.0001f)
+			{
+				toOther = Vec2(
+					(static_cast<float>(rand() % 200) / 100.0f) - 1.0f,
+					(static_cast<float>(rand() % 200) / 100.0f) - 1.0f
+				);
+				OtherLength = toOther.MagnitudeSquared();
+			}
+			
 			float separationRadius = static_cast<float>(World::instance->grid->GetCellSize()) * 0.5f;
 
-			if (OtherLength > 0.0001f && OtherLength < separationRadius * separationRadius)
+			if (OtherLength < separationRadius * separationRadius)
 			{
 				separation += toOther / OtherLength;
 			}
 		}
 		separation = separation.ClampMag(separation, rat->_maxForce);
-		separation *= _w_separation;
+		separation *= _w_separation * (rat->_lightSource ? 10.0f : 1.0f);
 		rat->body->AddForce(separation);
 
-		if (rat->_displayDebugTools)
-		{
-			std::cout << "Separation force applied: (" << separation.Magnitude() << ")\n";
-		}
 
 		// speed limit by obstacles sighting
 		float obstacleFactor = rat->GetForwardObstacleFactor();
@@ -200,7 +196,6 @@ void World::Update(float dt)
         e->Update(dt);
     }
 
-    
 	//World::bodiesUpdate(dt);
 }
 
@@ -264,6 +259,23 @@ void World::Render() {
     for (auto& s : swarms) {
         s->Render();
     }
+
+	// Remove killed rats
+	for (auto& swarm : swarms) {
+		swarm->RemoveDeadRats();
+	}
+
+	World::instance->rats.erase(
+		std::remove_if(
+			World::instance->rats.begin(),
+			World::instance->rats.end(),
+			[](const std::unique_ptr<Rat>& r)
+			{
+				return r->_pendingKill;
+			}
+		),
+		World::instance->rats.end()
+	);
 }
 
 float World::GetCellAttractiveness(const Cell* c) const

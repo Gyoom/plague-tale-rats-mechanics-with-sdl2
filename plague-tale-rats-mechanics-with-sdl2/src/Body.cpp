@@ -18,6 +18,7 @@ Body::Body(const Shape& shape, Vec2 pos, float mass, float minVel, float maxVel,
 	this->maxVelocity = maxVel;
 	this->minVelocity = minVel;
 	this->_linearDrag = linearDrag;
+    this->_effectiveLinearDrag = linearDrag;
     this->canCollide = canCollide;
 
     this->sumForces = Vec2(0, 0);
@@ -72,8 +73,14 @@ void Body::AddTorque(float torque) {
     sumTorque += torque;
 }
 
+void Body::AddImpulse(const Vec2& impulse)
+{
+	sumImpulse += impulse;
+}
+
 void Body::ClearForces() {
     sumForces = Vec2(0.0, 0.0);
+	sumImpulse = Vec2(0.0, 0.0);
 }
 
 void Body::ClearTorque() {
@@ -107,6 +114,8 @@ void Body::IntegrateLinear(float dt) {
     // 🔑 DRAG
     velocity *= std::exp(-_linearDrag * dt);
 
+	
+
     // 🔑 SPEED LIMIT
     velocity = Vec2::ClampMag(velocity, maxVelocity, minVelocity);
 
@@ -116,7 +125,8 @@ void Body::IntegrateLinear(float dt) {
     if (velocity.MagnitudeSquared() > 0.0001f)
     {
         forward = velocity;
-		forward.Normalize();
+        forward.Normalize();
+       
         rotation = atan2(forward.y, forward.x);
     }
 
@@ -187,22 +197,29 @@ void GridBody::IntegrateLinear(float dt) {
     }
 
     acceleration = sumForces * invMass;
-
+   
     velocity += acceleration * dt;
 
-    // 🔑 DRAG
-    velocity *= std::exp(-_linearDrag * dt);
+    // DRAG
+    velocity *= std::exp(_dragEnabled ? -_linearDrag : 0.0f * dt);
 
-    // 🔑 SPEED LIMIT
-    velocity = Vec2::ClampMag(velocity, _desiredVelocity, 0.0f);
+    // SPEED LIMIT
+	if (_dragEnabled)
+        velocity = Vec2::ClampMag(velocity, _desiredVelocity, 0.0f);
+
+	// IMPULSE
+    velocity += sumImpulse * invMass;
 
     position += velocity * dt;
 
     if (velocity.MagnitudeSquared() > 0.0001f)
     {
-        forward = velocity;
-        forward.Normalize();
-        rotation = atan2(forward.y, forward.x);
+        if (!fowardLocked)
+        {
+            forward = velocity;
+            forward.Normalize();
+            rotation = atan2(forward.y, forward.x);
+        }
     }
 
     ClearForces();

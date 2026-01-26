@@ -38,5 +38,8 @@ public:
 		return value;
 	}
 
+	static float saturate(float value) {
+		return clamp(value, 0.0f, 1.0f);
+	}
 };
 

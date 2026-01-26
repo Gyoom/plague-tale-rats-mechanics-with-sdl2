@@ -31,6 +31,8 @@ void Player::Update(float dt)
 		else {
 			if (rat->_target == this) {
 				rat->_target = nullptr;
+				rat->body->velocity = Vec2(0.0f, 0.0f); // stop the rat when losing the target
+				rat->EndRepelFromLight();
 			}
 		}
 	}
