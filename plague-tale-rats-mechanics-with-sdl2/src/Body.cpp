@@ -194,7 +194,7 @@ void GridBody::IntegrateLinear(float dt) {
     velocity *= std::exp(-_linearDrag * dt);
 
     // 🔑 SPEED LIMIT
-    velocity = Vec2::ClampMag(velocity, _effectiveMaxVelocity, _effectiveMinVelocity);
+    velocity = Vec2::ClampMag(velocity, _desiredVelocity, 0.0f);
 
     position += velocity * dt;
 

@@ -35,81 +35,69 @@ void Application::Setup() {
     world = make_unique<World>(0);
     srand(time(NULL));
 
-
-	// Create player
-    world->player = make_unique<Player>(
-            make_unique<Body>(
-                PolygonShape({
-                    Vec2(30, 0),
-                    Vec2(-15, 15),
-                    Vec2(-15, -15),
-                }),
-                Vec2(Graphics::Width() / 2.0f, Graphics::Height() * 0.8f),
-                1.0f,
-				0.0f,
-				300.0f,
-                3,
-                false
-            ),
-            "assets/player_ship.png"
-	);
-	world->player->body->_color = 0xFF00FF00;
-	world->player->body->forward = Vec2(0.0f, -1.0f);
-	world->player->body->rotation = -M_PI / 2.0f;
-
-	// Create light
-	world->light = make_unique<Light>(world->player->body->position, 200.0f, 0.8f);
-
-
 	// Create boids
-	//unique_ptr<Boid> rat;
- //   for (int i = 0; i < 40; i++) {
- //       rat = make_unique<Boid>(
- //           make_unique<Body>(
- //               PolygonShape({
- //                   Vec2(25, 0),
- //                   Vec2(-10, 10),
- //                   Vec2(-10, -10),
- //               }),
- //               Vec2(rand() % Graphics::Width(), rand() % Graphics::Height()),
- //               1.0f,
- //               false
- //           ),
- //           "assets/rat.png",
- //           i == 0
- //       );
-	//	rat->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * rat->body->maxVelocity; // random initial velocity
- //       world->boids.push_back(move(rat));
- //       
-	//}
-
-    // Rats
-	world->grid = make_unique<Grid>(40);
-	world->swarm = make_unique<Swarm>();
-    unique_ptr<Rat> rat;
-    for (int i = 0; i < 200; i++) {
-        rat = make_unique<Rat>(
-            make_unique<GridBody>(
+	unique_ptr<Boid> boid;
+    for (int i = 0; i < 100; i++) {
+        boid = make_unique<Boid>(
+            make_unique<Body>(
                 PolygonShape({
                     Vec2(25, 0),
                     Vec2(-10, 10),
                     Vec2(-10, -10),
-                    }),
-                    Vec2(world->grid->GetGridWidth() / 2.0f, world->grid->GetGridHeight() / 2.0f),
-                    1.0f,
-					200.0f,
-					300.0f,
-                    0,
-                    false
-                    ),
+                }),
+                Vec2(rand() % Graphics::Width(), rand() % Graphics::Height()),
+                1.0f,
+				200.0f,
+				300.0f,
+                3,
+                false
+            ),
             "assets/rat.png",
-			i == 0 // display debug tools for the first rat only
+            i == 0
         );
-        rat->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * rat->body->maxVelocity; // random initial velocity
-		world->rats.push_back(move(rat));
-		world->swarm->rats.push_back(world->rats.back().get());
-    }
+		boid->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * boid->body->maxVelocity; // random initial velocity
+        world->boids.push_back(move(boid));
+	}
 
+    /*
+    // Rats
+	world->grid = make_unique<Grid>(40);
+
+    // Create player
+    world->player = make_unique<Player>(
+        make_unique<Body>(
+            PolygonShape({
+                Vec2(30, 0),
+                Vec2(-15, 15),
+                Vec2(-15, -15),
+                }),
+                Vec2(Graphics::Width() / 2.0f, Graphics::Height() * 0.8f),
+                1.0f,
+                0.0f,
+                300.0f,
+                3,
+                false
+                ),
+        "assets/player_ship.png"
+    );
+    world->player->body->_color = 0xFF00FF00;
+    world->player->body->forward = Vec2(0.0f, -1.0f);
+    world->player->body->rotation = -M_PI / 2.0f;
+
+    // Create light
+    world->light = make_unique<Light>(world->player->body->position, 200.0f, 0.8f);
+
+	// Create swarms
+    for (int i = 0; i < 1; i++) {
+        world->swarms.push_back(
+            make_unique<Swarm>(
+                50,
+                Vec2(Graphics::Width() / 2.0f, Graphics::Height() * 0.25f),
+                true
+            )
+        );
+    }
+    */
 }
 
 ///////////////////////////////////////////////////////////////////////////////

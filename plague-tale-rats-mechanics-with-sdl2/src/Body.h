@@ -13,15 +13,14 @@ public:
 	bool canCollide = true;
 
 	Vec2 forward = Vec2(-1.0f, 0.0f);
-    float maxVelocity = 300.0f; // limit de vitesse
-    float minVelocity = 200.0f;
+    float maxVelocity; // limit de vitesse
+    float minVelocity;
 
-    float _effectiveMaxVelocity = maxVelocity; // limit de vitesse
-    float _effectiveMinVelocity = minVelocity;
+	float _desiredVelocity = 100.0f;
 
 	Uint32 _color = 0xFFFFFFFF;  
     
-	float _linearDrag = 0;
+	float _linearDrag;
 
     // Linear motion
 	Vec2 position;

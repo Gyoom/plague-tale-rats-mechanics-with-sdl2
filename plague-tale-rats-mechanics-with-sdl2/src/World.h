@@ -13,6 +13,7 @@ class Boid;
 class Body;
 class Grid;
 class Light;
+class Cell;
 
 class World {
     private:
@@ -36,8 +37,29 @@ class World {
 
 		// Rats
         std::unique_ptr<Grid> grid = nullptr;
-		std::unique_ptr<Swarm> swarm = nullptr;
+        std::vector<std::unique_ptr<Swarm>> swarms;
 		std::vector<std::unique_ptr<Rat>> rats;
+
+		// Cell attractiveness parameters
+        float _w_occupancy = 1.0f;
+        float _attractiveness_sharpness = 1.0f;
+        float _w_attractiveness = 0.5f;
+		// pursue target parameters
+        float _w_pursue = 10.0f;
+		// separation parameters
+		float _w_separation = 1000.0f;
+		// obstacle avoidance parameters
+        float _obstacleSlowingFactor = 2.0f;
+        float _w_obstacleAvoidance = 1.0f;
+
+        // Debug cells attractiveness
+        Rat* ratDebug = nullptr;
+        Vec2 dirDebug = Vec2(0, 0);
+        std::vector<Cell*> neigDebug;
+        
+        float sppedAdjustementRadius = 0.0f;
+
+		// Constructor and Destructor
 
         World(float gravity);
         ~World();
@@ -48,6 +70,7 @@ class World {
         void AddForce(const Vec2& force);
         void AddTorque(float torque);
 
+		void RatsUpdate(float dt);
 		void bodiesUpdate(float dt);
         void Update(float dt);
 
@@ -55,4 +78,8 @@ class World {
         void CheckCollisions();
 
 		void Render();
+
+        Vec2 GetDirToBestNeighborCell(const Rat* r, const std::vector<Cell*>& neighbors);
+        float GetCellAttractiveness(const Cell* c) const;
+
 };
