@@ -10,6 +10,8 @@
 #include "src/Constants.h"
 #include "src/Player.h"
 #include "src/Shape.h"
+#include <set>
+#include <map>
 
 
 using namespace std;
@@ -54,8 +56,6 @@ Swarm::Swarm(int ratCount, Vec2 pos, bool fixed, float cohesionRadiusFactor, boo
 		rat->body->velocity = Vec2(-1.0f, 0.0f).Rotate((float)(rand() % 360) * (M_PI / 180.0f)) * rat->body->maxVelocity; // random initial velocity
 		world->rats.push_back(move(rat));
 		rats.push_back(world->rats.back().get());
-
-		
 	}
 
 	

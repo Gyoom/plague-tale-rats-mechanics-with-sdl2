@@ -72,7 +72,8 @@ void Light::Update(float dt)
 		if (dist < closeRadius)
 		{
 			rat->body->velocity = Vec2(0, 0);
-			rat->body->AddImpulse(dirToRat * lightKickImpulse);
+			float impulseStrength = rat->_target ? lightKickImpulse : lightKickImpulse / 2.0f;
+			rat->body->AddImpulse(dirToRat * impulseStrength);
 			rat->_lightSource = this;
 
 			if (!rat->_isInLight)
